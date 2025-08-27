@@ -12,9 +12,8 @@ library(ggplot2)
 combined_data <- read_excel("C:/Users/ellie/OneDrive - University of Edinburgh/Dissertation/Data/accom_exp/cairngorms/clean_data/combined_data.xlsx")
 
 # CREATE FIGURE----
-
+# Without data points
 (ggplot(combined_data, aes(x = temperature, y = depth, color = type)) +
-   geom_point(size = 2, alpha= 0.2) +
    geom_smooth(method = "lm", se = FALSE) +
    labs(x = "Temperature (°C)",
         y = "Depth (cm)") +
@@ -23,4 +22,17 @@ combined_data <- read_excel("C:/Users/ellie/OneDrive - University of Edinburgh/D
    theme(legend.title = element_blank())+
    scale_x_continuous(sec.axis = dup_axis())
    
+)
+
+# With data points
+(ggplot(combined_data, aes(x = temperature, y = depth, color = type)) +
+    geom_point(alpha=0.25) +
+    geom_smooth(method = "lm", se = FALSE) +
+    labs(x = "Temperature (°C)",
+         y = "Depth (cm)") +
+    scale_color_manual(values = c("Control" = "navy", "Experimental" = "maroon")) +
+    theme_minimal() +
+    theme(legend.title = element_blank())+
+    scale_x_continuous(sec.axis = dup_axis())
+  
 )
