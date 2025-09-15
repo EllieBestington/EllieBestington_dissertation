@@ -1,5 +1,5 @@
 # MOCK FIGURE CREATION
-# CAIRNGORMS
+# CAIRNGORMS DEPTH VS TEMPERATURE VS TYPE
 # 21/08/2025
 # BY ELLIE BESTINGTON
 
@@ -18,9 +18,8 @@ combined_data <- read_excel("C:/Users/ellie/OneDrive - University of Edinburgh/D
    labs(x = "Temperature (°C)",
         y = "Depth (cm)") +
    scale_color_manual(values = c("Control" = "navy", "Experimental" = "maroon")) +
-   theme_minimal() +
-   theme(legend.title = element_blank())+
-   scale_x_continuous(sec.axis = dup_axis())
+   theme_classic() +
+   theme(legend.title = element_blank())
    
 )
 
@@ -32,7 +31,8 @@ combined_data <- read_excel("C:/Users/ellie/OneDrive - University of Edinburgh/D
          y = "Depth (cm)") +
     scale_color_manual(values = c("Control" = "navy", "Experimental" = "maroon")) +
     theme_minimal() +
-    theme(legend.title = element_blank())+
-    scale_x_continuous(sec.axis = dup_axis())
+    theme(legend.title = element_blank())
   
 )
+
+# ANALYSIS----
