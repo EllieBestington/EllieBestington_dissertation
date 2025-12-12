@@ -86,3 +86,9 @@ request <- list(
   area = c(72, -144, 67, -134),  # North, West, South, East (Qikiqtaruk region)
   format = "netcdf"
 )
+
+# QHI heatwave severity increasing over time
+# use this to back up what said in literature 
+# I made this graph, using ARCLIM data from Russo et al 2014
+# see also Russo 2014 paper on severity graph in appendices 
+# I think going to be too hard to get data for 2022 onwards but could give a go over Christmas break 
