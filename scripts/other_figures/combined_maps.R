@@ -107,14 +107,14 @@ label_y <- qhi_coords[2] - 800000   # Move down slightly
    # Add world in light gray
    geom_sf(data = world_ortho, fill = "gray85", color = "white", size = 0.3) +
    # Add QHI point
-   geom_sf(data = qhi_sf, color = "#D4A017", size = 5, shape = 16) +
+   geom_sf(data = qhi_sf, color = "brown3", size = 5, shape = 16) +
    # Add arrow from label to point 
    geom_curve(
      aes(x = label_x + 450000, y = label_y + 150000,  # Start from label
-         xend = point_x - 80000, yend = point_y - 80000),  # End near point
+         xend = point_x, yend = point_y),  # End near point
      arrow = arrow(length = unit(0.25, "cm"), type = "closed"),
      linewidth = 0.7,
-     color = "#D4A017") +
+     color = "brown3") +
    # Add label box to the left
    annotate("label", x = label_x, y = label_y,
             label = "Qikiqtaruk\n(Herschel Island)",
