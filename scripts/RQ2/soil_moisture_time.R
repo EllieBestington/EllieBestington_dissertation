@@ -10,7 +10,7 @@ library(readxl)
 library(dplyr)
 
 # LOAD DATA----
-clean_control_exp_data <- read_excel("datasets/lab_experiment/clean_control_exp_data.xlsx")
+clean_control_exp_data <- read_excel("dissertation_2026_bestington/datasets/lab_experiment/clean_control_exp_data.xlsx")
 
 # CLEAN DATA---
 clean_control_exp_data <- clean_control_exp_data %>%
@@ -31,3 +31,7 @@ clean_control_exp_data <- clean_control_exp_data %>%
    theme(legend.text = element_text(size = 12)) +
    theme_classic()
 )
+
+# clear divergence between control and experimental after inital thawing of fridge cores 
+# day one (0-24 hours) cores losing moisture rapidly due to thawing then seem to settle into cycle of increasinh moisture overnight then decreasing again 
+# but because heat not as strong for control cores they retain more moisture overall
