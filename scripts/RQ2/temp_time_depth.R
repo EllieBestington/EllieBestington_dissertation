@@ -10,11 +10,11 @@ library(readxl)
 library(dplyr)
 
 # LOAD DATA----
-clean_control_exp_data <- read_excel("datasets/lab_experiment/clean_control_exp_data.xlsx")
+clean_control_exp_data <- read_excel("dissertation_2026_bestington/datasets/lab_experiment/clean_control_exp_data.xlsx")
 
 
 # FIGURE AS FACET WRAP ----
-(rq2_facet_temp_time<-ggplot(clean_control_exp_data, aes(x = hour, y = temp, color = type)) +
+(rq2_fac5et_temp_time<-ggplot(clean_control_exp_data, aes(x = hour, y = temp, color = type)) +
   geom_line(size = 1) +
   geom_point(size = 2) +
   labs(
@@ -33,6 +33,9 @@ clean_control_exp_data <- read_excel("datasets/lab_experiment/clean_control_exp_
     legend.text = element_text(size = 10)
   )
 )
+# worry with this figure is that too squashed so hard to see differences between depths of control and experimental 
+# better way to represent? 
+
 
 # FIGURE AS DIFFERENCE IN TEMPERATURE----
 (change_temp_time<-clean_control_exp_data %>%
@@ -54,6 +57,9 @@ clean_control_exp_data <- read_excel("datasets/lab_experiment/clean_control_exp_
       legend.text = element_text(size = 10)
     )
 )
+# difference greatest in first 24 hours- correlates with rapid thawing of experimental but retention of cold/frozenness in control 
+# due to polystrene that is insulating control 
+# then settles into more cyclic pattern after initial thawing period
 
 # FIGURE JUST SURFACE TEMP ----
 (surface_temp_time<-clean_control_exp_data %>%
@@ -76,3 +82,6 @@ clean_control_exp_data <- read_excel("datasets/lab_experiment/clean_control_exp_
      legend.text = element_text(size = 10)
    )
 )
+# surface temps show clear divergence between control and experimental treatments with experimental cores heating up much faster and to higher temps overall
+# seems to establish a cyclic pattern after initial rapid increase in temp over first 10 hours or so (because of rapid onset of heat/thawing of cores)
+# control cores heat up much more slowly and dont reach as high temps overall
