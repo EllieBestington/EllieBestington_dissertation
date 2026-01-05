@@ -7,10 +7,10 @@ library(tidyverse)
 library(dplyr)
 library(ggplot2)
 library(readxl)
+library(lme4)
 
 # LOAD DATA----
-QHI_combined_data <- read_excel("datasets/QHI_roots_data/QHI_combined_data.xlsx")
-
+QHI_combined_data <- read_excel("dissertation_2026_bestington/datasets/QHI_roots_data/QHI_combined_data.xlsx")
 
 # FIGURE -----
 (community_biomass_year<-QHI_combined_data %>%
@@ -24,6 +24,26 @@ QHI_combined_data <- read_excel("datasets/QHI_roots_data/QHI_combined_data.xlsx"
   scale_fill_manual(values = c("2023" = "deepskyblue3", "2024" = "brown3"))+
   theme_classic() 
 )
+
+# ANALYSIS----
+# is there a significant difference between each year by functional group? 
+
+# histogram
+hist(QHI_combined_data$root_dry_biomass_total) # looks right skewed/non-normal
+QHI_combined_data$root_dry_biomass_total <- scale(QHI_combined_data$root_dry_biomass_total, center = TRUE, scale = TRUE) # scaling and standardising data
+hist(QHI_combined_data$root_dry_biomass_total) # still right skewed
+
+# test assumptions
+shapiro.test(QHI_combined_data$root_dry_biomass_total) # p-value < 0.05, data not normal
+
+
+# basic linear model - root biomass & year
+basic_lm<- lm(root_dry_biomass_total ~ year, data = QHI_combined_data)
+summary(basic_lm) 
+plot(basic_lm) # not normal, heteroscedasticity
+
+
+
 
 # FIGURE 2 IDEA----
 (year_biomass_community<-QHI_combined_data %>%
