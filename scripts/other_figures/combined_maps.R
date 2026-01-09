@@ -10,6 +10,7 @@ library(rnaturalearthdata)
 library(ggspatial)
 library(ggmap)
 library(cowplot)
+library(readxl)
 
 # ZOOMED IN VIEW============
 # LOAD DATA----
@@ -144,3 +145,9 @@ label_y <- qhi_coords[2] - 800000   # Move down slightly
   rel_widths = c(1, 1)
 )
 )
+# SAVE FIGURE===========================
+ggsave(combined_map,
+       filename = file.path("figures", "other_figures", "combined_maps.png"),
+       device = "png",
+       height = 6, width = 10, units = "in",
+       dpi = 300)
