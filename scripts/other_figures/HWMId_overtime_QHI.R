@@ -7,7 +7,7 @@ library(terra)
 library(raster)
 
 # Load the multi-year HWMI data----
-hwmi <- rast("arclim_HWMI.tif")
+hwmi <- rast("C:/Users/ellie/OneDrive - University of Edinburgh/Dissertation/Data/climate_data/arclim_HWMI.tif")
 
 # Check how many layers (years) you have
 hwmi
