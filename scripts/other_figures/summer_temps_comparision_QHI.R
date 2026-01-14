@@ -10,7 +10,7 @@ library(ggplot2)
 library(dplyr)
 
 # LOAD DATA----
-QHI_climate_combined <- read_excel("dissertation_2026_bestington/datasets/climate_data/QHI_climate_combined.xlsx")
+QHI_climate_combined <- read_excel("datasets/climate_data/QHI_climate_combined.xlsx")
 
 # FIGURE----
 (QHI_climate_combined %>%
