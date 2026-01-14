@@ -90,10 +90,10 @@ ggsave(large_QHI,
 # LOAD DATA
 QHI_subplots <- read_excel("datasets/location_data/QHI_TOMST_location_clean.xlsx")
 
-# Get base map data----
+# Get base map data
 canada <- ne_states(country = "canada", returnclass = "sf")
 
-# Convert subplots to spatial object----
+# Convert subplots to spatial object
 subplots_sf <- st_as_sf(QHI_subplots, 
                         coords = c("lon", "lat"), 
                         crs = 4326)
@@ -130,7 +130,7 @@ site_lat <- 69.589
    coord_sf(xlim = c(-139.5, -138.8), ylim = c(69.5, 69.7), expand = FALSE) +
    annotation_scale(location = "bl", width_hint = 0.3) +
   labs(x = "Longitude", y = "Latitude") +
-   theme_bw() +
+   theme_minimal() +
    theme(
      panel.background = element_rect(fill = "lightblue"),
      panel.grid = element_line(color = "white", linewidth = 0.3),
@@ -147,4 +147,6 @@ ggsave(zoomed_map,
        device = "png",
        height = 6, width = 10, units = "in",
        dpi = 300)
+
+
 
