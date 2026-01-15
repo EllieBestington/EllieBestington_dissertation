@@ -60,6 +60,7 @@ clean_control_exp_data <- read_excel("dissertation_2026_bestington/datasets/lab_
 # difference greatest in first 24 hours- correlates with rapid thawing of experimental but retention of cold/frozenness in control 
 # due to polystrene that is insulating control 
 # then settles into more cyclic pattern after initial thawing period
+# MEL AND JIRI LIKE THIS GRAPH MORE, USE OTHER ONE IN APPENDIX (SHOWS MORE RAW DATA RESULTS RATHER THAN INTERPRETATION)
 
 # FIGURE JUST SURFACE TEMP ----
 (surface_temp_time<-clean_control_exp_data %>%
