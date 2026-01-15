@@ -11,27 +11,29 @@ library(ggplot2)
 
 # LOAD DATA----
 QHI_combined_data <- read_excel("dissertation_2026_bestington/datasets/QHI_roots_data/QHI_combined_data.xlsx")
-clean_control_exp_data <- read_excel("dissertation_2026_bestington/datasets/lab_experiment/clean_control_exp_data.xlsx")
-
+clean_control_exp_data <- read_excel("datasets/lab_experiment/clean_control_exp_data.xlsx")
 # FILTER DATA FOR 2024----
 QHI_2024 <- QHI_combined_data %>%
   filter(year == 2024)
 
-# PLOT DEPTH VS ROOT BIOMASS FOR 2024----
+# PLOT DEPTH VS ROOT BIOMASS FOR 2024 by community----
 (QHI_combined_data %>%
   filter(year %in% c(2024)) %>%
   filter(!is.na(max_depth_increment), !is.na(root_dry_biomass_total)) %>%
   filter(max_depth_increment != "N/A") %>%
   mutate(max_depth_increment_numeric = as.numeric(as.character(max_depth_increment))) %>%
-  ggplot(aes(x = max_depth_increment_numeric, y = root_dry_biomass_total)) +
+  ggplot(aes(x = max_depth_increment_numeric, y = root_dry_biomass_total, colour = community)) +
   geom_point(alpha = 0.3) +
-  geom_smooth(method = "lm", se = TRUE, color = "blue") +
+  geom_smooth(method = "lm")+
   labs(title = "Root Biomass vs Depth (2024)",
        x = "Depth (cm)",
-       y = "Root Biomass (g/m²)") +
+       y = "Root Biomass (g/m²)",
+       colour = "Community") +
   theme_classic() +
   scale_x_continuous(breaks = c(5, 10, 15, 20, 25, 30))
 )
+# mix community (possible with the graminoids) driving the relationship we are seeing i.e. higher biomass deeper post heatwave due to thawing 
+# but this doens't match up with the thawing depth data we have seen -> data might be wrong though, one to ask Elise 
 
 
 # PLOT ROOT BIOMASS BY TEMP FOR 2024 BY COMMUNITY  ----
@@ -93,6 +95,11 @@ QHI_2024 <- QHI_combined_data %>%
     theme_classic() +
     theme(legend.position = "bottom")
   )
+  
+  
+  
+  
+  
 # Add correlation statistics----
   library(ggpubr)
   
