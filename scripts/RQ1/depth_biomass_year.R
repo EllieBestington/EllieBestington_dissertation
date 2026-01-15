@@ -11,7 +11,6 @@ library(readxl)
 # LOAD DATA----
 QHI_combined_data <- read_excel("datasets/QHI_roots_data/QHI_combined_data.xlsx")
 
-
 # FIGURE----
 (depth_biomass_year<-QHI_combined_data %>%
    filter(year %in% c(2023, 2024)) %>%
