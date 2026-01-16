@@ -17,7 +17,7 @@ QHI_combined_data$year <- as.factor(QHI_combined_data$year)
 # Is there a significant difference in root biomass between 2023 and 2024 across different community types?
 # i.e. does root biomass vary significantly in different community types between the years? 
 # e.g. there is a significant difference in shrub root biomass between 2023 and 2024 
-# # VISUALISE WITH HISTOGRAM----
+# VISUALISE WITH HISTOGRAM----
 ggplot(QHI_combined_data, aes(x = root_dry_biomass_total, fill= community)) +
   geom_histogram(binwidth = 0.05, position = "dodge", color = "black") +
   labs(title = "Distribution of Total Dry Root Biomass by Year",
@@ -59,6 +59,7 @@ emmeans(roots_community_anova, pairwise ~ year | community, adjust = "tukey")
 # possible explanations: 
   # driven by graminoids in mix plots ability to grow deeper from increased thaw? Have to wait to get graminoid plots back from lab 
 
+
 # CHECKING ASSUMPTIONS----
 # Normality of resuiduals
 plot(roots_community_anova)
@@ -75,7 +76,7 @@ hist(residuals(roots_community_anova), breaks = 20)
 bartlett.test(root_dry_biomass_total ~ interaction(year, community), data = QHI_combined_data)
 
 # TRANSFORMATION OF DATA----
-# Log transformation (common for biomass)
+# Log transformation 
 QHI_combined_data$log_biomass <- log(QHI_combined_data$root_dry_biomass_total + 0.001)
 anova_log <- aov(log_biomass ~ year * community, data = QHI_combined_data)
 shapiro.test(residuals(anova_log))
@@ -89,7 +90,7 @@ shapiro.test(residuals(anova_sqrt))
 plot(anova_sqrt, which = 2)
 hist(residuals(anova_sqrt), breaks = 20)
 
-# Cube root (good for data with zeros)
+# Cube root 
 QHI_combined_data$cbrt_biomass <- sign(QHI_combined_data$root_dry_biomass_total) * 
   abs(QHI_combined_data$root_dry_biomass_total)^(1/3)
 anova_cbrt <- aov(cbrt_biomass ~ year * community, data = QHI_combined_data)
@@ -97,8 +98,20 @@ shapiro.test(residuals(anova_cbrt))
 plot(anova_cbrt, which = 2)
 hist(residuals(anova_cbrt), breaks = 20)
 
-# cube root deals with it best? Check with Elise 
+# cube root deals with it best? Okay to use given smaller sample size for 2024- just need to address this when discussing.
+# Check with Elise 
 
 # ALTERING ANOVA TO USE CUBE ROOT DATA----
 anova_cbrt <- aov(cbrt_biomass ~ year * community, data = QHI_combined_data)
 summary(anova_cbrt)
+
+# no longer significant 
+# post hoc tests again
+emmeans(anova_cbrt, pairwise ~ community | year, adjust = "tukey")
+emmeans(anova_cbrt, pairwise ~ year | community, adjust = "tukey")
+# no significant differences found anymore 
+
+# NEW CONCLUSIONS ----
+# After applying a cube root transformation to meet ANOVA assumptions, the previously observed significant differences in root biomass between community types and years are no longer significant.
+# This suggests that the initial findings may have been influenced by non-normality in the data.
+# Further investigation with larger sample sizes, especially for 2024, is recommended to validate these BUT can't do due to lab delays- so need to address in discussion limitations
