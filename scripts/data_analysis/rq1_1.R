@@ -61,3 +61,7 @@ wilcox.test(root_dry_biomass_total ~ year, data = QHI_combined_data)
 # p=0.06195 -> no statistically significant difference 
 
 
+
+
+# CONCLUSION----
+# No significant difference in root biomass overall between 2023 and 2024 based on ANOVA and Wilcox test results.
