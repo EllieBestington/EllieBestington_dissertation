@@ -29,6 +29,7 @@ QHI_combined_data <- read_excel("datasets/QHI_roots_data/QHI_combined_data.xlsx"
 )
 
 # FIGURE WITH LINE OF BEST FIT ----
+# need to change x axis values
 (depth_biomass_year_lobf <- QHI_combined_data %>%
   filter(year %in% c(2023, 2024)) %>%
   filter(!is.na(max_depth_increment), !is.na(root_dry_biomass_total)) %>%
@@ -51,3 +52,26 @@ QHI_combined_data <- read_excel("datasets/QHI_roots_data/QHI_combined_data.xlsx"
 # futher research analysing multiple years, tracking heatwaves would be required 
 # but then need to be careful if its due to heatwaves or just general increases in temp due too CC, hence doing short term year to year analysis better for understanding short term heatwaves impact? So this stuyd is important
 
+# FIGURE COMMUNITY, BIOMASS, DEPTH----
+(depth_biomass_community_year <- QHI_combined_data %>%
+    filter(year %in% c(2023, 2024)) %>%
+    filter(!is.na(max_depth_increment), !is.na(root_dry_biomass_total)) %>%
+    filter(max_depth_increment != "N/A") %>%
+    mutate(max_depth_increment = factor(max_depth_increment, 
+                                        levels = c("5", "10", "15", "20", "25", "30"))) %>%
+    ggplot(aes(x = max_depth_increment, y = root_dry_biomass_total, colour = community)) +
+    geom_point(alpha = 0.7) +
+    geom_smooth(aes(group = community), method = "lm", se = TRUE)+
+    facet_wrap(~year) +
+    labs(
+      x = "Depth (cm)",
+      y = "Dry Root Biomass (g)",
+      colour = "Community") +
+    scale_colour_manual(values = c("Graminoid" = "#E69F00", "Shrub" = "#009E73", "Mix"="#CC79A7"))+
+    theme_classic() 
+)
+
+# in 2023/pre heatwave mix and shrub so increase in biomass with depth (only slighly- see analysis 1.4)
+# in 2023 graminoids actually show a decrease with depth! Opposite to what would usually think with graminoids that are deeper rooting
+# in 2024/post heatwave shrub doesn't look like its changed but mix shows a large increase in biomass with depth
+# no data for graminoids in 2024 yet but hopefully large increase with depth (and hence what is driving the mix increase)
