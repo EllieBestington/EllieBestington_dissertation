@@ -54,6 +54,15 @@ shapiro.test(roots_anova$residuals)
 plot(roots_anova, which = 1)
 bartlett.test(root_dry_biomass_total ~ year, data = QHI_combined_data)
 
+# CUBE ROOT TRANSFORMATION?----
+QHI_combined_data <- QHI_combined_data %>% 
+  mutate(cube_root_biomass = (root_dry_biomass_total)^(1/3))
+hist(QHI_combined_data$cube_root_biomass)
+shapiro.test(residuals(roots_cuberoot_anova))
+roots_cuberoot_anova <- aov(cube_root_biomass ~ year, data = QHI_combined_data)
+summary(roots_cuberoot_anova)
+
+# still not normally distributed 
 
 # NON-PARAMETRIC TESTS?? -----
 # Wilcox Test 
