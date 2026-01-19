@@ -82,7 +82,9 @@ hist(residuals(anova_depth_cuberoot))
 anova_depth_cuberoot<- aov(cube_root_biomass ~ max_depth_increment * year, data = QHI_combined_data)
 summary(anova_depth_cuberoot)
 
-# only significant effect with biomass and depth (p= 8.02e-6) When introduce year, no longer significant
+# only significant effect with biomass and depth (p= 8.02e-6) When introduce year, no longer significant, 
+# so no significant difference/changes in root biomass and depth  between 2023 and 2024, similar relationships/trends in biomass
+# see 1.4 for investigating by community type
 
 # what's the relationship between depth and biomass for 2024 
 anova_2024_cuberoot<- aov(cube_root_biomass ~ max_depth_increment, data = filter(QHI_combined_data, year == "2024"))
