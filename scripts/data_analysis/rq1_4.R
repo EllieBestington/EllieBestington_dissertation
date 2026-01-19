@@ -1,4 +1,5 @@
 # RQ1 PART 4: SIGNIFICANT DIFFERENCE BETWEEN BIOMASS AND DEPTH BY COMMUNITY TYPE
+# THREE WAY ANOVA FOR ALL VARIABLES TOO 
 # 19/01/2026 
 
 # LOAD LIBRARIES----
@@ -88,3 +89,16 @@ anova_2024_shrubs<- aov(cube_root_biomass ~ max_depth_increment, data = filter(Q
 summary(anova_2024_shrubs)
 # no significant interaction between biomass and depth for shrub community either 
 # again possible due to fewer data points (ongoing lab analysis) - only one for each depth increment 
+# THREE WAY ANOVA FOR ALL VARAIBLES ----
+# Does the depth-biomass relationship by community type differ between years?
+# i.e. Did the heatwave affect different communities' rooting patterns differently?
+# Three-way ANOVA with all interactions
+anova_year_comparison <- aov(cube_root_biomass ~ max_depth_increment * community * year, 
+                             data = filter(QHI_combined_data, 
+                                           year %in% c("2023", "2024"),
+                                           max_depth_increment != "N/A"))
+summary(anova_year_comparison)
+# p=0.09025 -> Suggests the depth-biomass relationship by community type may have changed differently between years
+    # i.e. different communities might have shifted their rooting depth patterns differently in response to the heatwave
+    # but just shy of traditional statistical significance of p <0.05
+    # likely due to low sample size in 2024 and high variation/leverage points
