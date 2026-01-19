@@ -27,6 +27,7 @@ summary(anova_depth)
 # effect of depth on root biomass differs between years (p= 0.0260)
 # biomass and depth also have a significant relationship (positive, p = 0.0393)
   # higher biomass at deeper depths, could be due to thawing and more available space for roots to grow
+  # see rq1_4 for biomass, depths by community type analysis, could be that more graminoids deeper down? 
 
 
 # what's the relationship between depth and biomass for 2024 
@@ -51,6 +52,11 @@ shapiro.test(residuals(anova_depth))
 hist(residuals(anova_depth))
 # not normal distribution
 
+# homogeneity of variance
+bartlett.test(root_dry_biomass_total ~ interaction(max_depth_increment, year), data = QHI_combined_data)
+
+plot(anova_depth)
+
 # TRANSFORMING DATA----
 # log transform
 QHI_combined_data <- QHI_combined_data %>% 
@@ -70,4 +76,24 @@ summary(anova_depth_cuberoot)
 
 shapiro.test(residuals(anova_depth_cuberoot))
 hist(residuals(anova_depth_cuberoot))
-# now more normally distrubuted 
+# now more normally distrubuted, use this in analysis
+
+# FINAL ANOVA RESULTS AFTER TRANSFORMATION----
+anova_depth_cuberoot<- aov(cube_root_biomass ~ max_depth_increment * year, data = QHI_combined_data)
+summary(anova_depth_cuberoot)
+
+# only significant effect with biomass and depth (p= 8.02e-6) When introduce year, no longer significant
+
+# what's the relationship between depth and biomass for 2024 
+anova_2024_cuberoot<- aov(cube_root_biomass ~ max_depth_increment, data = filter(QHI_combined_data, year == "2024"))
+summary(anova_2024_cuberoot)
+# not significant (0.83)
+
+# what's the relationship between depth and biomass for 2023
+anova_2023_cuberoot<- aov(cube_root_biomass ~ max_depth_increment, data = filter(QHI_combined_data, year == "2023"))
+summary(anova_2023_cuberoot)
+# 2023 is significant (p= 1.51e-7)
+
+# BUT WE NEED TO NOTE (as before)!!
+  # sample size imbalance- could be a significant difference in 2024 but not enough data compared to 2023 to determine this (107 vs 27)
+  # point 112 high leverage 
