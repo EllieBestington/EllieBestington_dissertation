@@ -11,7 +11,7 @@ library(dplyr)
 
 # LOAD DATA----
 clean_control_exp_data <- read_excel("dissertation_2026_bestington/datasets/lab_experiment/clean_control_exp_data.xlsx")
-
+clean_control_exp_data <- read_excel("datasets/lab_experiment/clean_control_exp_data.xlsx")
 
 # FIGURE AS FACET WRAP ----
 (rq2_fac5et_temp_time<-ggplot(clean_control_exp_data, aes(x = hour, y = temp, color = type)) +
