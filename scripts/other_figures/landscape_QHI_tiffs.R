@@ -45,9 +45,10 @@ plot(elevation)
 par(mar = c(3, 3, 3, 3))
 plot(elevation, 
      col = terrain.colors(100),
-     main = "Elevation")
+     main = "Elevation", 
+     xlab = "Easting (m)", 
+     ylab = "Northing (m)")
 points(sites_utm, pch = 4, col = "red2", cex = 1.5)
-
 
 
 # LOAD DATA SLOPE----
