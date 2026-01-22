@@ -13,9 +13,18 @@ library(emmeans)
 # LOAD DATA----
 QHI_combined_data <- read_excel("datasets/QHI_roots_data/QHI_combined_data.xlsx")
 
-# MAKE YEAR FACTOR VARIABLE ----
+# CLEAN DATA ----
 QHI_combined_data$year <- as.factor(QHI_combined_data$year)
+QHI_combined_data <- QHI_combined_data %>%
+  mutate(rootmass_bulkdensity = as.numeric(rootmass_bulkdensity)) %>%
+  filter(!is.na(rootmass_bulkdensity)) %>%
+  # remove row 32
+  filter(row_number() != 32)
 QHI_combined_data$max_depth_increment <- as.factor(QHI_combined_data$max_depth_increment)
+
+# removed outlier row 32 which had rootmass_bulkdensity of 5.98 g/cm3, likely a data entry error 
+# see notebook for further laboratory explanation 
+
 
 # QUESTION----
 # Is there a significant difference in biomass and depth by community type?
@@ -24,7 +33,7 @@ QHI_combined_data$max_depth_increment <- as.factor(QHI_combined_data$max_depth_i
 # DATA TRANSFORM TO CUBE ROOT - SEE RQ1_3----
 # cube root
 QHI_combined_data <- QHI_combined_data %>% 
-  mutate(cube_root_biomass = (root_dry_biomass_total)^(1/3)) 
+  mutate(cube_root_biomass = (rootmass_bulkdensity)^(1/3)) 
 anova_community_cuberoot<- aov(cube_root_biomass ~ max_depth_increment * community, data = QHI_combined_data)
 summary(anova_depth_cuberoot)
 
@@ -45,17 +54,17 @@ summary(anova_2023_community)
 # graminoids 
 anova_2023_graminoids<- aov(cube_root_biomass ~ max_depth_increment, data = filter(QHI_combined_data, year == "2023", community == "Graminoid"))
 summary(anova_2023_graminoids)
-# significant difference in biomass by depth in graminoid community in 2023 (p= 0.0168)
+# significant difference in biomass by depth in graminoid community in 2023 (p= 0.0364)
 
 # shrubs
 anova_2023_shrubs<- aov(cube_root_biomass ~ max_depth_increment, data = filter(QHI_combined_data, year == "2023", community == "Shrub"))
 summary(anova_2023_shrubs)
-# also significant difference in biomass by depth in shrub community in 2023 (p= 0.0121)
+# no significant difference in biomass by depth in shrub community in 2023 (p= 0.745)
 
 # mix
 anova_2023_mix<- aov(cube_root_biomass ~ max_depth_increment, data = filter(QHI_combined_data, year == "2023", community == "Mix"))
 summary(anova_2023_mix)
-# also significant difference in biomass by depth in mix community in 2023 (p= 0.000418)
+# also significant difference in biomass by depth in mix community in 2023 (p= 0.00745)
 
 # each community type shows significant differences in biomass by depth in 2023 but when comparing between them, community type is not significant
 # Despite these significant effects within each community, overall biomass levels do not differ between community types (p = 0.363), 
@@ -71,6 +80,8 @@ TukeyHSD(anova_2023_community, which = "max_depth_increment")
 # In 2023, root biomass appears to peak in the mid-depth range (15-25cm) and decline at the deepest depth (30cm) across all community types. 
 # suggests that regardless of plant community composition, roots are concentrated in the upper-to-middle soil profile, with less investment in the deepest soil layer sampled.
         # possible due to soil conditions/permafrost layer??
+
+
 # TWO WAY ANOVA 2024 ONLY----
 anova_2024_community <- aov(cube_root_biomass ~ max_depth_increment * community, data = filter(QHI_combined_data, year == "2024"))
 summary(anova_2024_community)
@@ -89,6 +100,8 @@ anova_2024_shrubs<- aov(cube_root_biomass ~ max_depth_increment, data = filter(Q
 summary(anova_2024_shrubs)
 # no significant interaction between biomass and depth for shrub community either 
 # again possible due to fewer data points (ongoing lab analysis) - only one for each depth increment 
+
+
 # THREE WAY ANOVA FOR ALL VARAIBLES ----
 # Does the depth-biomass relationship by community type differ between years?
 # i.e. Did the heatwave affect different communities' rooting patterns differently?
@@ -98,7 +111,6 @@ anova_year_comparison <- aov(cube_root_biomass ~ max_depth_increment * community
                                            year %in% c("2023", "2024"),
                                            max_depth_increment != "N/A"))
 summary(anova_year_comparison)
-# p=0.09025 -> Suggests the depth-biomass relationship by community type may have changed differently between years
+# p=0.5796 -> Suggests the depth-biomass relationship by community type has not changed differently between years
     # i.e. different communities might have shifted their rooting depth patterns differently in response to the heatwave
-    # but just shy of traditional statistical significance of p <0.05
     # likely due to low sample size in 2024 and high variation/leverage points
