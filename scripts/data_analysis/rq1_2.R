@@ -10,27 +10,35 @@ library(emmeans)
 # LOAD DATA----
 QHI_combined_data <- read_excel("datasets/QHI_roots_data/QHI_combined_data.xlsx")
 
-# MAKE YEAR FACTOR VARIABLE ----
+# CLEAN DATA ----
 QHI_combined_data$year <- as.factor(QHI_combined_data$year)
+QHI_combined_data <- QHI_combined_data %>%
+  mutate(rootmass_bulkdensity = as.numeric(rootmass_bulkdensity)) %>%
+  filter(!is.na(rootmass_bulkdensity)) %>%
+  # remove row 32
+  filter(row_number() != 32)
+
+# removed outlier row 32 which had rootmass_bulkdensity of 5.98 g/cm3, likely a data entry error 
+# see notebook for further laboratory explanation 
 
 # QUESTION----
 # Is there a significant difference in root biomass between 2023 and 2024 across different community types?
 # i.e. does root biomass vary significantly in different community types between the years? 
 # e.g. there is a significant difference in shrub root biomass between 2023 and 2024 
 # VISUALISE WITH HISTOGRAM----
-ggplot(QHI_combined_data, aes(x = root_dry_biomass_total, fill= community)) +
+ggplot(QHI_combined_data, aes(x = rootmass_bulkdensity, fill= community)) +
   geom_histogram(binwidth = 0.05, position = "dodge", color = "black") +
   labs(title = "Distribution of Total Dry Root Biomass by Year",
-       x = "Total Root Biomass",
+       x = "Root Biomass Density (g cm⁻³)",
        y = "Count") +
   theme_minimal()
 
 # STATISTICAL TEST: TWO-WAY ANOVA ----
 # two way anova needed as two explanatory variables (year and community)
-roots_community_anova <- aov(root_dry_biomass_total ~ year * community, data = QHI_combined_data)
+roots_community_anova <- aov(rootmass_bulkdensity ~ year * community, data = QHI_combined_data)
 summary(roots_community_anova)
 
-# the effect of community on root biomass differs between years (p= 0.0098)
+# the effect of community on root biomass differs between years (p= 0.0419)
 # The communities don't differ consistently across years, and years don't differ consistently across communities—the pattern changes depending on the combination.
 
 # EMMEANS POST HOC TEST---
@@ -70,7 +78,7 @@ qqnorm(residuals(roots_community_anova))
 qqline(residuals(roots_community_anova))
 # Histogram
 hist(residuals(roots_community_anova), breaks = 20)
-# pretty normal I think - should check with Elise/Mel 
+# not normal 
 
 # Homogeneity of variances
 bartlett.test(root_dry_biomass_total ~ interaction(year, community), data = QHI_combined_data)
@@ -91,15 +99,15 @@ plot(anova_sqrt, which = 2)
 hist(residuals(anova_sqrt), breaks = 20)
 
 # Cube root 
-QHI_combined_data$cbrt_biomass <- sign(QHI_combined_data$root_dry_biomass_total) * 
-  abs(QHI_combined_data$root_dry_biomass_total)^(1/3)
+QHI_combined_data$cbrt_biomass <- sign(QHI_combined_data$rootmass_bulkdensity) * 
+  abs(QHI_combined_data$rootmass_bulkdensity)^(1/3)
 anova_cbrt <- aov(cbrt_biomass ~ year * community, data = QHI_combined_data)
 shapiro.test(residuals(anova_cbrt))
 plot(anova_cbrt, which = 2)
 hist(residuals(anova_cbrt), breaks = 20)
 
 # cube root deals with it best? Okay to use given smaller sample size for 2024- just need to address this when discussing.
-# Check with Elise 
+# Check with Elise - histogram looks good, can do comparison before and after in appendix 
 
 # ALTERING ANOVA TO USE CUBE ROOT DATA----
 anova_cbrt <- aov(cbrt_biomass ~ year * community, data = QHI_combined_data)
