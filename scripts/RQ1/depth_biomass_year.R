@@ -11,6 +11,18 @@ library(readxl)
 # LOAD DATA----
 QHI_combined_data <- read_excel("datasets/QHI_roots_data/QHI_combined_data.xlsx")
 
+# CLEAN DATA----
+QHI_combined_data <- QHI_combined_data %>%
+  mutate(rootmass_bulkdensity = as.numeric(rootmass_bulkdensity)) %>%
+  filter(!is.na(rootmass_bulkdensity)) %>%
+  # remove row 32
+  filter(row_number() != 32)
+
+# removed outlier row 32 which had rootmass_bulkdensity of 5.98 g/cm3, likely a data entry error 
+# see notebook for further laboratory explanation 
+
+
+
 # FIGURE----
 (depth_biomass_year<-QHI_combined_data %>%
    filter(year %in% c(2023, 2024)) %>%
@@ -18,11 +30,11 @@ QHI_combined_data <- read_excel("datasets/QHI_roots_data/QHI_combined_data.xlsx"
    filter(max_depth_increment != "N/A") %>%
    mutate(max_depth_increment = factor(max_depth_increment, 
                                        levels = c("5", "10", "15", "20", "25", "30"))) %>%
-   ggplot(aes(x = max_depth_increment, y = root_dry_biomass_total, fill = as.factor(year))) +
+   ggplot(aes(x = max_depth_increment, y = rootmass_bulkdensity, fill = as.factor(year))) +
    geom_boxplot(position = position_dodge(width = 0.8), alpha = 0.7) +
    labs(
      x = "Depth (cm)",
-     y = "Dry Root Biomass (g)",
+     y = "Root Biomass Density (g cm⁻³)",
      fill = "Year") +
    scale_fill_manual(values = c("2023" = "deepskyblue3", "2024" = "brown3"))+
    theme_classic() 
@@ -35,17 +47,17 @@ QHI_combined_data <- read_excel("datasets/QHI_roots_data/QHI_combined_data.xlsx"
   filter(!is.na(max_depth_increment), !is.na(root_dry_biomass_total)) %>%
   filter(max_depth_increment != "N/A") %>%
   mutate(max_depth_increment = as.numeric(max_depth_increment)) %>%
-  ggplot(aes(x = max_depth_increment, y = root_dry_biomass_total, color = as.factor(year))) +
+  ggplot(aes(x = max_depth_increment, y = rootmass_bulkdensity, color = as.factor(year))) +
   geom_point(alpha = 0.3) +
   geom_smooth(method = "lm", se = TRUE) +
   labs(
     x = "Depth (cm)",
-    y = "Dry Root Biomass (g)",
+    y = "Root Biomass Density (g cm⁻³)",
     color = "Year") +
   scale_color_manual(values = c("2023" = "deepskyblue3", "2024" = "brown3")) +
   theme_classic()
 )
-# 2023 not really any change, slight increase with decreasing depth
+# 2023 not really any change, decrease with decreasing depth
 # but 2024 more of an increase with decreasing depth- potential for graminoids to be taking advantage of deeper rooting as more space available!
 # would need to compare to community biomass year graph to see if this is reflected there too
 # if results not significant in analysis, can just say exposure of heatwave not long enough to cause significant change, but over time with more heatwaves could be the case 
@@ -59,13 +71,13 @@ QHI_combined_data <- read_excel("datasets/QHI_roots_data/QHI_combined_data.xlsx"
     filter(max_depth_increment != "N/A") %>%
     mutate(max_depth_increment = factor(max_depth_increment, 
                                         levels = c("5", "10", "15", "20", "25", "30"))) %>%
-    ggplot(aes(x = max_depth_increment, y = root_dry_biomass_total, colour = community)) +
+    ggplot(aes(x = max_depth_increment, y = rootmass_bulkdensity, colour = community)) +
     geom_point(alpha = 0.7) +
     geom_smooth(aes(group = community), method = "lm", se = TRUE)+
     facet_wrap(~year) +
     labs(
       x = "Depth (cm)",
-      y = "Dry Root Biomass (g)",
+      y = "Root Biomass Density (g cm⁻³)",
       colour = "Community") +
     scale_colour_manual(values = c("Graminoid" = "#E69F00", "Shrub" = "#009E73", "Mix"="#CC79A7"))+
     theme_classic() 
