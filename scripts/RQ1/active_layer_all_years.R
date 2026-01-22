@@ -11,6 +11,16 @@ library(tidyr)
 QHI_root_data <- read_excel("datasets/QHI_roots_data/QHI_combined_data.xlsx")
 ald_all_years<-read_excel("datasets/QHI_roots_data/active_layer_thaw_combined.xlsx")
 
+# CLEAN DATA----
+QHI_root_data <- QHI_root_data %>%
+  mutate(rootmass_bulkdensity = as.numeric(rootmass_bulkdensity)) %>%
+  filter(!is.na(rootmass_bulkdensity)) %>%
+  # remove row 32
+  filter(row_number() != 32)
+
+# removed outlier row 32 which had rootmass_bulkdensity of 5.98 g/cm3, likely a data entry error 
+# see notebook for further laboratory explanation 
+
 # NEW DATA FRAME CHANGE IN ACTIVE LAYER DEPTH 2022 TO 2025----
 ald_change <- ald_all_years %>% 
   filter(year %in% c(2022, 2025)) %>%
@@ -34,9 +44,9 @@ ald_change <- ald_all_years %>%
 root_biomass_change <- QHI_root_data %>% 
   filter(year %in% c(2023, 2024)) %>%
   group_by(subplot, year, core_ID) %>%
-  summarise(root_dry_biomass_total = sum(root_dry_biomass_total, na.rm = TRUE), 
+  summarise(rootmass_bulkdensity = sum(rootmass_bulkdensity, na.rm = TRUE), 
             .groups = "drop") %>%
-  pivot_wider(names_from = year, values_from = root_dry_biomass_total, names_prefix = "year_") %>%
+  pivot_wider(names_from = year, values_from = rootmass_bulkdensity, names_prefix = "year_") %>%
   mutate(change_in_root_biomass_2023_2024 = year_2024 - year_2023) %>%
   select(subplot, core_ID, change_in_root_biomass_2023_2024)
 
@@ -55,9 +65,9 @@ combined_change <- na.omit(combined_change)
 (combined_change_plot <- ggplot(combined_change, aes(x = change_in_ALD_2022_2025, y = change_in_root_biomass_2023_2024 )) +
   geom_point(size = 3) +
   geom_smooth(method = "lm", se = FALSE, color = "blue") +
-  labs(title = "Change in Active Layer Depth vs Change in Root Biomass",
+  labs(title = "Change in Active Layer Depth vs Change in Root Biomass Density",
        x = "Change in Active Layer Depth (cm)",
-       y = "Change in Root Biomass (g)") +
+       y = "Change in Root Biomass Density (g cm⁻³)") +
   theme_classic()
 )
 # when active layer decreases (more permafrost), root biomass also decreases?
