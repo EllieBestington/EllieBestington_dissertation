@@ -7,6 +7,8 @@ library(dplyr)
 library(readxl)
 library(tidyr)
 
+# won't work now as data frame for ald has changed in GitHub repo, but leaving code here for when we have ald data specific for core sites 
+
 # LOAD DATA----
 QHI_root_data <- read_excel("datasets/QHI_roots_data/QHI_combined_data.xlsx")
 ald_all_years<-read_excel("datasets/QHI_roots_data/active_layer_thaw_combined.xlsx")
