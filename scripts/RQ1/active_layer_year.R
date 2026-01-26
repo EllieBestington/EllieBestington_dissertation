@@ -34,7 +34,7 @@ ald_all_years$year <- as.factor(ald_all_years$year)
 # 2. Unusual weather patterns in 2024 that led to shallower active layers, such as increased precipitation or cooler temperatures (though doesn't correlate with temperature data)
 # 3. Changes in vegetation cover or soil composition that could affect insulation and heat transfer to the permafrost layer- i.e. increase in vegetation cover, more mosses under warmer temperatures, create blanket and insulate?
 
-# ACTIVE LAYER 2022, 2024, 2025 COMPARISON----
+# OLD PLOT -- ACTIVE LAYER 2022, 2024, 2025 COMPARISON----
 (ald_all_years_plot<-ald_all_years %>%
     ggplot(aes(x = year, y = thaw_av, fill = as.factor(year))) +
     geom_jitter(width = 0.2, alpha = 0.7) +
@@ -54,10 +54,36 @@ ald_all_years$year <- as.factor(ald_all_years$year)
 # so maybe the active layer depth data is correct but our root data isn't deep enough to capture roots in the full active layer?
 
 
+# NEW PLOT- ACTIVE LAYER 2022, 2024, 2025 COMPARISON----
+
+# clean data
+ald_all_years <- ald_all_years %>%
+  mutate(year = as.factor(year))
+# filter data for in 2022 doy 217, in 2024 doy 223 & 224, in 2025 doy 223 & 225
+ald_filtered <- ald_all_years %>%
+  filter((year == 2022 & doy == 217) |
+           (year == 2024 & doy %in% c(223, 224)) |
+           (year == 2025 & doy %in% c(223, 225)))
+# filtering for last sampling dates in each year to compare ALD across years 
+
+# plot 
+(ald_all_years_plot <- ggplot(ald_filtered, aes(x = year, y = thaw_av, fill = year)) +
+    geom_jitter(width = 0.2, alpha = 0.7) +
+    geom_boxplot(position = position_dodge(width = 0.8), alpha = 0.5) +
+    labs(title = "Active Layer Depth Across Years at End of Growing Season",
+         x = "Year",
+         y = "Active Layer Depth (cm)") +
+    scale_fill_manual(values = c("2022" = "brown1", "2024" = "brown3", "2025"= "darkred"))+
+    theme_classic() +
+    theme(legend.position = "none")
+)
+
+
 # ANOVA TEST ACTIVE LAYER DEPTH YEARS----
 anova_ald<- aov(thaw_av ~ year, data = ald_all_years)
 summary(anova_ald)
 # significant difference in active layer depth between years (p-value = 0.0213)
+
 
 # CHECK ASSUMPTIONS----
 # normality of residuals
