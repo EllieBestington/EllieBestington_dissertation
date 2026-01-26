@@ -23,13 +23,40 @@ ald_all_years <- ald_all_years %>% rename(subplot = sub_plot)
 ald_snowmelt <- ald_all_years %>% 
   left_join(snowmelt_dates, by = c("subplot", "year"))
 
-# PLOT DATA----
-(ggplot(ald_snowmelt, aes(x = doy, y = thaw_av, color = as.factor(year))) +
+
+# CLEAN DATA---
+# change year to as factor in snowmelt_dates
+snowmelt_dates <- snowmelt_dates %>% mutate(year = as.factor(year))
+
+
+
+# PLOT DATA SNOWMELT DATA ONLY----
+(ggplot(snowmelt_dates, aes(x = year, y = doy, colour = year )) +
+  geom_boxplot() +
+  labs(x = "Year", y = "DoY 100% Snow Free") +
+  theme_classic() +
+  theme(legend.position = "none")
+  
+)
+
+# only one in 2023 as doy was same for all subplots
+
+# PLOT DATA ALD & SNOWMELT----
+(ggplot(ald_snowmelt, aes(x = doy, y = thaw_av)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(x = "DoY 100% Snow Free", y = "Active Layer Depth (cm)", color = "Year") +
-  theme_minimal() +
+  labs(x = "DoY 100% Snow Free", y = "Active Layer Depth (cm)") +
+  theme_classic() +
   ggtitle("Relationship between Snowmelt Date and Active Layer Depth")
 )
 
- 
+# QUICK ANALYSIS OF ABOVE FIGURE----
+# linear model 
+ald_snowmelt_lm <- lm(thaw_av ~ doy, data = ald_snowmelt)
+summary(ald_snowmelt_lm) 
+# p value 0.9538 - no significant relationship between snowmelt date and ALD
+
+# check assumptions
+plot(ald_snowmelt_lm)
+shapiro.test(residuals(ald_snowmelt_lm)) # p value would suggest normally distributed 
+hist(residuals(ald_snowmelt_lm)) 
