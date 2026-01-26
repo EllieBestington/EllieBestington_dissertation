@@ -31,7 +31,7 @@ snowmelt_dates <- snowmelt_dates %>% mutate(year = as.factor(year))
 
 
 # PLOT DATA SNOWMELT DATA ONLY----
-(ggplot(snowmelt_dates, aes(x = year, y = doy, colour = year )) +
+(snowmelt_dates_fig<-ggplot(snowmelt_dates, aes(x = year, y = doy, colour = year )) +
   geom_boxplot() +
   labs(x = "Year", y = "DoY 100% Snow Free") +
   theme_classic() +
@@ -40,6 +40,8 @@ snowmelt_dates <- snowmelt_dates %>% mutate(year = as.factor(year))
 )
 
 # only one in 2023 as doy was same for all subplots
+
+ggsave("figures/RQ1/snowmelt_dates_boxplot.png", snowmelt_dates_fig, width = 6, height = 4)
 
 # PLOT DATA ALD & SNOWMELT----
 (ggplot(ald_snowmelt, aes(x = doy, y = thaw_av)) +
