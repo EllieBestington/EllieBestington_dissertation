@@ -9,6 +9,7 @@ library(tidyverse)
 library(ggplot2)
 library(readxl)
 
+# won't work as new data frame for ald_all_years
 
 # LOAD DATA----
 snowmelt_dates <- read_excel("datasets/climate_data/snowmelt_dates.xlsx")
