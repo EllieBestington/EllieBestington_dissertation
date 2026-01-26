@@ -88,7 +88,12 @@ ggsave(large_QHI,
 
 # ZOOMED IN VIEW WITH PLOTS ----
 # LOAD DATA
-QHI_subplots <- read_excel("datasets/location_data/QHI_TOMST_location_clean.xlsx")
+QHI_coordinates  <- read_excel("datasets/location_data/phenocam_ald_gps_coordinates.xlsx")
+
+# FILTER FOR PHENOCAM ONLY
+QHI_subplots <- QHI_coordinates %>%
+  filter(type == "phenocam") %>%
+  select(subplot, lon, lat)
 
 # Get base map data
 canada <- ne_states(country = "canada", returnclass = "sf")
