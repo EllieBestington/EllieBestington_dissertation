@@ -94,3 +94,5 @@ plot(elev_slope_stack,
      col = terrain.colors(100), 
      main = c("Elevation", "Slope"))
 points(sites_utm, pch = 4, col = "red2", cex = 1.5)
+
+
