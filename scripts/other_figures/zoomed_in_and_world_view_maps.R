@@ -88,19 +88,19 @@ ggsave(large_QHI,
 
 # ZOOMED IN VIEW WITH PLOTS ----
 # LOAD DATA
-QHI_coordinates  <- read_excel("phenocam_ald_gps_coordinates.xlsx")
+QHI_coordinates<- read_excel("datasets/location_data/phenocam_ald_gps_coordinates.xlsx")
 
 # FILTER FOR PHENOCAM ONLY
 QHI_subplots <- QHI_coordinates %>%
   dplyr::filter(type == "phenocam") %>%
-  dplyr::select(subplot, longitude, latitude)
+  dplyr::select(subplot, lon, lat)
 
 # Get base map data
 canada <- ne_states(country = "canada", returnclass = "sf")
 
 # Convert subplots to spatial object
 subplots_sf <- st_as_sf(QHI_subplots,
-                        coords = c("longitude", "latitude"),
+                        coords = c("lon", "lat"),
                         crs = 4326)
 # Calculate center point for QHI
 # General QHI study site location (center of your subplots)
@@ -155,16 +155,48 @@ ggsave(zoomed_map,
 
 
 # ELISE EDITS ----
+
+# get yukon bbox
+
+library(geodata)
+
+can_gadm <- gadm(country = "CAN", level = 1, path = tempdir())
+
+
+yukon_sf <- st_as_sf(can_gadm) %>%
+  
+  dplyr::filter(NAME_1 == "Yukon")
+
+
+
 # correct the crs
+
 custom_crs <- "+proj=laea +lat_0=69.59 +lon_0=-138.91 +datum=WGS84 +units=m +no_defs"
+
+subplots_proj <- st_transform(subplots_sf, crs = custom_crs)
+
+bbox <- st_bbox(subplots_proj)
+
+
+
+
+
 yukon_final <- st_transform(yukon_sf, crs = custom_crs)
+
 subplots_final <- st_transform(subplots_sf, crs = custom_crs)
 
+
+
 # get bounding box
+
 xlims <- c(bbox["xmin"] - 14000, bbox["xmax"] + 1000)
+
 ylims <- c(bbox["ymin"] - 6000, bbox["ymax"] + 7000)
 
+
+
 # new plot
+
 (final_map <- ggplot() +
     theme_minimal() +
     theme(panel.background = element_rect(fill = "#D0E1F9", color = NA)) +
@@ -178,7 +210,6 @@ ylims <- c(bbox["ymin"] - 6000, bbox["ymax"] + 7000)
     labs(title = "QIKIQTARUK STUDY SITE",
          subtitle = "Herschel Island, Yukon Territory",
          x = "Longitude", y = "Latitude") +
-
     theme(
       plot.title = element_text(face = "bold", size = 16, hjust = 0.5),
       plot.subtitle = element_text(size = 10, hjust = 0.5, color = "gray30"),
@@ -186,22 +217,13 @@ ylims <- c(bbox["ymin"] - 6000, bbox["ymax"] + 7000)
       axis.title = element_text(size = 10),
       axis.text = element_text(size = 8)
     )
+  
 )
 
-
-# SAVE ZOOMED VIEW
+# SAVE----
 ggsave(final_map,
-       filename = file.path("figures", "other_figures", "NEW_QHI_zoomed_view.png"),
+       filename = file.path("figures", "other_figures", "QHI_final_zoomed_view.png"),
        device = "png",
-       height = 6, width = 10, units = "in",
+       height = 6, width = 8, units = "in",
        dpi = 300)
-
-
-
-
-
-
-
-
-
 
