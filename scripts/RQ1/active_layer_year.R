@@ -95,3 +95,23 @@ hist(residuals(anova_ald))
 # homogeneity of variance
 bartlett.test(thaw_av ~ year, data = ald_all_years)
 # also fine
+
+
+# ACTIVE LAYER PAST YEARS----
+
+
+
+(ggplot<-ald_all_years %>%
+    ggplot(aes(x = year, y = thaw_av)) +
+    geom_point(alpha = 0.5) +
+    geom_line(stat = "summary", fun = "mean") +
+    labs(x = "Year",
+         y = "Active Layer Depth (cm)") +
+    scale_colour_manual(values = c("2022" = "lightblue", "2024" = "brown3", "2025"= "darkred")) +
+    theme_classic()+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+   scale_y_reverse()+
+   geom_hline(yintercept = 0, linetype = "dashed", color = "black", linewidth = 1)
+   
+)
+
