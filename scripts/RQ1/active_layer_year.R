@@ -164,10 +164,10 @@ summary(mod2)
   # Full dataset: Weak decreasing trend overall
 
 # why? - multiple reasons we think
-# 1. 2023 was an anomalous year with extreme heatwave causing unprecedented thawing
-# 2. colder winters in 2024 delayed snowmelt (shown by later 100% snow free dates)
+# 1. 2023 was an anomalous year with extreme heatwave causing unprecedented thawing- evidenced 
+# 2. colder winters in 2024 delayed snowmelt (shown by later 100% snow free dates)- evidenced 
 # 3. this caused a shorter thaw season, leading to shallower maximum thaw depth 
 # 4. the active layer detachments/alds observed in 2023 remove the deepest thaw zones
-  # why- slumps typically occur where thaw is deepest and ice lens becomes unstable 
+  # why- slumps typically occur where thaw is deepest and ice lens becomes unstable - literature 
   # when deep thaw areas detatch and slide away, left measuring shallower more stable areas, hence reducing active layer depth in 2024 and 2025 
 
