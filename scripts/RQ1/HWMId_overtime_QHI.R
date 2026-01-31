@@ -44,6 +44,7 @@ plot(qhi_data$year, qhi_data$hwmi,
 # Add trend line
 abline(lm(hwmi ~ year, data = qhi_data), col = "blue", lwd = 2)
 
+# GGPLOT----
 (ggplot2::ggplot(qhi_data, ggplot2::aes(x = year, y = hwmi)) +
   ggplot2::geom_point(color = "brown3") +
   ggplot2::geom_line() +
