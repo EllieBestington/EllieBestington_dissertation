@@ -113,8 +113,12 @@ bartlett.test(thaw_av ~ year, data = ald_all_years)
 )
 
 # analysis of the line- not right, want to determine significance of ald across all years 
-mod1<-lm(thaw_av ~ year, data= ald_all_years)
+mod1 <- lm(thaw_av ~ as.numeric(as.character(year)), data = ald_all_years)
 summary(mod1)
+# p= 0.04861 - significant but when look at r2 value its 0.004
+# very weak relationship between year and ald
+# thaw depth decreasing by 0.10cm per year
+# very small trend, but let's see what happens when we exclude the 2024 and 2025
 
 
 # normality of residuals
@@ -131,4 +135,38 @@ hist(residuals(mod1))
 
 
 # do figure removing years 2024 and 2025 to see how its been increasing ALD 
+ald_pre2023 <- ald_all_years %>%
+  filter(year %in% c(1986:2023))
+(ald_pre2023_plot<-ald_pre2023 %>%
+    ggplot(aes(x = year, y = thaw_av)) +
+    geom_point(alpha = 0.5) +
+    geom_smooth(method = "lm")+
+    labs(x = "Year",
+         y = "Active Layer Depth (cm)") +
+    annotate("text", x = 1990, y = 5, label = "R2 = 0.24", size = 5, color = "black")+
+    theme_classic()+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+    scale_y_reverse()+
+    geom_hline(yintercept = 0, linetype = "dashed", color = "black", linewidth = 1)
+)
+ 
+
+
+
+mod2 <- lm(thaw_av ~ as.numeric(as.character(year)), data = ald_pre2023)
+summary(mod2)
+# p <0,0001 - highly significant
+# strong increasing trend - thaw depth increasing by 0.68 cm per year 
+# r2 = 0.24, not amazing but good for natural data 
+# means something happened in 2023- i.e. the thawing!
+  # Pre-2023: Clear, strong increasing trend in thaw depth (deeper thawing over time)
+  # Full dataset: Weak decreasing trend overall
+
+# why? - multiple reasons we think
+# 1. 2023 was an anomalous year with extreme heatwave causing unprecedented thawing
+# 2. colder winters in 2024 delayed snowmelt (shown by later 100% snow free dates)
+# 3. this caused a shorter thaw season, leading to shallower maximum thaw depth 
+# 4. the active layer detachments/alds observed in 2023 remove the deepest thaw zones
+  # why- slumps typically occur where thaw is deepest and ice lens becomes unstable 
+  # when deep thaw areas detatch and slide away, left measuring shallower more stable areas, hence reducing active layer depth in 2024 and 2025 
 
