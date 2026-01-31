@@ -98,20 +98,37 @@ bartlett.test(thaw_av ~ year, data = ald_all_years)
 
 
 # ACTIVE LAYER PAST YEARS----
-
-
-
-(ggplot<-ald_all_years %>%
+# incls years post large thaw in 2023 
+(ald_all_years<-ald_all_years %>%
     ggplot(aes(x = year, y = thaw_av)) +
     geom_point(alpha = 0.5) +
-    geom_line(stat = "summary", fun = "mean") +
+    geom_smooth(method = "lm")+
     labs(x = "Year",
          y = "Active Layer Depth (cm)") +
-    scale_colour_manual(values = c("2022" = "lightblue", "2024" = "brown3", "2025"= "darkred")) +
     theme_classic()+
     theme(axis.text.x = element_text(angle = 45, hjust = 1))+
    scale_y_reverse()+
    geom_hline(yintercept = 0, linetype = "dashed", color = "black", linewidth = 1)
    
 )
+
+# analysis of the line- not right, want to determine significance of ald across all years 
+mod1<-lm(thaw_av ~ year, data= ald_all_years)
+summary(mod1)
+
+
+# normality of residuals
+plot(mod1)
+shapiro.test(residuals(mod1))
+hist(residuals(mod1))
+# normal
+
+
+# interesting, inclusion of 2024 and 2024 now changes the pattern
+# from Isla's report, up until 2023, ALDs were increasing, but now decreasing/not changed now since 1986
+# but this hides what has actually been happening i.e. the large thawing in 2023
+# climate change is impacting, unlike what this figure would suggets 
+
+
+# do figure removing years 2024 and 2025 to see how its been increasing ALD 
 
