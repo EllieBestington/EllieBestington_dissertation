@@ -105,6 +105,7 @@ bartlett.test(thaw_av ~ year, data = ald_all_years)
     geom_smooth(method = "lm")+
     labs(x = "Year",
          y = "Active Layer Depth (cm)") +
+   annotate("text", x = 1990, y = 5, label = "R2 = 0.004", size = 5, color = "black")+
     theme_classic()+
     theme(axis.text.x = element_text(angle = 45, hjust = 1))+
    scale_y_reverse()+
