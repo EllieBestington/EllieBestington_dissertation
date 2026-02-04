@@ -33,7 +33,7 @@ daily_soil_temps<- TOMST_summer_temps %>%
 (air_temps<-ggplot(daily_air_temps, aes(x = doy, y = daily_air_temp, color = as.factor(year))) +
   geom_line(size = 1) +
   labs(title = "Air") +
-   scale_color_manual(values = c("2023" = "deepskyblue3", "2024" = "brown3")) +
+   scale_color_manual(values = c("2023" = "brown3", "2024" = "steelblue")) +
   theme_classic()+
   theme(legend.position = "none",
         plot.title = element_text(hjust = 0.5),
@@ -47,7 +47,7 @@ daily_soil_temps<- TOMST_summer_temps %>%
    geom_line(size = 1) +
    labs(title = "Surface",
         y = "Average Temperature (°C)")+
-   scale_color_manual(values = c("2023" = "deepskyblue3", "2024" = "brown3")) +
+   scale_color_manual(values = c("2023" = "brown3", "2024" = "steelblue")) +
    theme_classic()+
    theme(axis.title.x = element_blank(),
          plot.title = element_text(hjust = 0.5),
@@ -61,7 +61,7 @@ daily_soil_temps<- TOMST_summer_temps %>%
    labs(title = "Soil",
         x = "Day of Year",
         color= "Year") +
-   scale_color_manual(values = c("2023" = "deepskyblue3", "2024" = "brown3")) +
+   scale_color_manual(values = c("2023" = "brown3", "2024" = "steelblue")) +
    theme_classic()+
    theme(legend.position = "bottom",
          plot.title = element_text(hjust = 0.5),
