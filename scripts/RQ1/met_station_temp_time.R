@@ -22,14 +22,15 @@ met_station_avg <- met_station_combined %>%
 
 # PLOT DATA----
 (ggplot(met_station_combined, aes(x = doy, y = air_temp, color = as.factor(year))) +
-    geom_point(alpha = 0.1) +
+   geom_point(alpha = 0.1) +
     geom_line(stat = "summary", fun = "max") +
+    geom_smooth(method = "lm", se = FALSE, linewidth = 1)+
     geom_hline(yintercept = 22, linetype = "dashed", color = "black", linewidth = 1)+
     labs(title = "Max Daily Air Temperature by Day of Year",
          x = "Day of Year",
          y = "Air Temperature (°C)",
          color= "Year") +
-    scale_colour_manual(values = c("2023" = "skyblue2", "2024" = "brown3")) +
+    scale_colour_manual(values = c("2022" = "lightgreen","2023" = "brown3", "2024" = "skyblue3")) +
     theme_classic()+
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
 )
@@ -39,5 +40,21 @@ met_station_avg <- met_station_combined %>%
 # in 2024 especially at end in august 6 days! 
 # note the line represents the MAX temperatures reached that day, but points show all the temperature values for that day 
 
+# quite a messy graph above, but trying to show comparison of years and that 2023 was on average hotter 
+# but do i already show this from ERA5 anomaly map?
 
+# PLOT JUST 2023 DATA----
+(ggplot(filter(met_station_combined, year == 2023), aes(x = doy, y = air_temp)) +
+    geom_point(alpha = 0.1, color = "brown3") +
+    geom_line(stat = "summary", fun = "max" , color = "brown3") + 
+    geom_hline(yintercept = 22, linetype = "dashed",
+               color = "black", linewidth = 1)+
+    labs(x = "Day of Year",
+         y = "Air Temperature (°C)") +
+    theme_classic()+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+)
 
+# just 2023 data to show how long heatwaves were for that summer 
+# Canada met office states over 22C for more than 2 consecutive days 
+# in diss doc circle/annotate peaks 
