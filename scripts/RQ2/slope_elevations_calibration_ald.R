@@ -6,6 +6,7 @@
 library(raster)
 library(terra)
 library(readxl)
+library(ggplot2)
 
 
 # LOAD DATA----
@@ -125,6 +126,7 @@ ggplot(ald_elevation_slope_coordinates_last_day, aes(x = slope, y = thaw_av, col
        x = "Slope (degrees)",
        y = "Thaw Depth (cm)",
        color = "Year") +
+  scale_color_manual(values = c("2023" = "steelblue", "2024" = "brown3")) +
   theme_classic()
 
 # While we observed slightly deeper thaw on gentle slopes, the dramatic 2024 decline occurred across all slope positions
