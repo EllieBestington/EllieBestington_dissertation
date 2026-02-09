@@ -69,7 +69,7 @@ par(mar = c(3, 3, 3, 3))
 plot(slope, 
      col = terrain.colors(100), 
      main = "Slope")
-points(sites_utm, pch = 4, col = "red2", cex = 1.5)
+points(sites_utm_ald, pch = 4, col = "red2", cex = 1.5)
 
 # EXTRACT SLOPE VALUES AT ALD POINTS----
 slope_values <- terra::extract(slope_terra, vect(sites_utm_ald))
@@ -126,12 +126,11 @@ ald_elevation_slope_coordinates_last_day <- ald_elevation_slope_coordinates_ %>%
   group_by(year, site) %>%
   filter(doy == max(doy))
 
-# plot thaw against slope for last day
+# plot thaw against slope for last day- USE THIS 
 ggplot(ald_elevation_slope_coordinates_last_day, aes(x = slope, y = thaw_av, color = as.factor(year))) +
   geom_point(size = 3) +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "Active Layer Thaw Depth vs Slope on Last Day of Measurements",
-       x = "Slope (degrees)",
+  labs(x = "Slope (degrees)",
        y = "Thaw Depth (cm)",
        color = "Year") +
   scale_color_manual(values = c("2023" = "steelblue", "2024" = "brown3")) +
