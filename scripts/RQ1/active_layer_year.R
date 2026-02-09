@@ -62,6 +62,7 @@ ald_all_years <- ald_all_years %>%
 # filter data for in 2022 doy 217, in 2024 doy 223 & 224, in 2025 doy 223 & 225
 ald_filtered <- ald_all_years %>%
   filter((year == 2022 & doy == 217) |
+           (year == 2023 & doy == 228) |
            (year == 2024 & doy %in% c(223, 224)) |
            (year == 2025 & doy %in% c(223, 225)))
 # filtering for last sampling dates in each year to compare ALD across years 
@@ -73,7 +74,7 @@ ald_filtered <- ald_all_years %>%
     labs(title = "Active Layer Depth Across Years at End of Growing Season",
          x = "Year",
          y = "Active Layer Depth (cm)") +
-    scale_fill_manual(values = c("2022" = "brown1", "2024" = "brown3", "2025"= "darkred"))+
+    scale_fill_manual(values = c("2022" = "brown1","2023"= "brown2", "2024" = "brown3", "2025"= "darkred"))+
     theme_classic() +
     theme(legend.position = "none")
 )
