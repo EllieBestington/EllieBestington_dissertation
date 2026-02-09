@@ -60,7 +60,11 @@ slope_values_df <- slope_values_df %>%
 
 # CALCULATE CHANGE IN BIOMASS AT EACH SITE BETWEEN 2023 AND 2024----
 # First, we need to calculate the change in biomass for each site. Assuming you have biomass data for both years in your QHI_combined_data, we can do this as follows:
-# Fix the data type first
+biomass_2024 <- QHI_combined_data %>%
+  filter(year == 2024)
+biomass_2023 <- QHI_combined_data %>%
+  filter(year == 2023)
+
 biomass_2024 <- biomass_2024 %>%
   mutate(rootmass_bulkdensity = as.numeric(rootmass_bulkdensity))
 
@@ -161,3 +165,44 @@ ggplot(final_data, aes(x = slope, y = percent_change_in_biomass, color = communi
 # this makes sense? As steeper slopes more at risk to erosion and ALD
 # compare side by side to active layer graph 
 
+# SCATTER PLOT BIOMASS VS SLOPE----
+# add slope values by subplot to the QHI combined data 
+QHI_combined_data <- QHI_combined_data %>%
+  left_join(slope_values_df %>% dplyr::select(subplot, slope), by = "subplot")
+
+# remove zeros and na from qhi combined data for this plot
+QHI_combined_data <- QHI_combined_data %>%
+  filter(!is.na(rootmass_bulkdensity)) %>%
+  filter(rootmass_bulkdensity > 0)  %>%
+  # remove row 32
+  filter(row_number() != 31)
+
+
+ggplot(QHI_combined_data, aes(x = slope, y = rootmass_bulkdensity, colour = as.factor(year))) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    x = "Slope (degrees)",
+    y = "Root Biomass Density (g cm⁻³)",
+    color = "Year"
+  ) +
+  theme_classic() +
+  scale_y_continuous(labels = scales::label_number(accuracy = 0.1)) +
+  theme(
+    axis.line.x = element_line(color = "black"),
+    panel.grid.major.x = element_blank()
+  )
+
+QHI_combined_data %>%
+    filter(year %in% c(2023, 2024)) %>%
+    ggplot(aes(x = as.numeric(slope), y = as.numeric(rootmass_bulkdensity), colour = as.factor(year))) +
+  geom_point(size = 3, alpha=0.5) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    x = "Slope (degrees)",
+    y = "Root Biomass Density (g cm⁻³)",
+    colour = "Year"
+  ) +
+  scale_colour_manual(values = c("2023" = "steelblue", "2024" = "brown3")) +
+    scale_y_continuous(labels = scales::label_number(accuracy = 0.1)) +
+    theme_classic()
