@@ -20,8 +20,8 @@ coordinates(ald_only) <- ~longitude + latitude
 proj4string(ald_only) <- CRS("+proj=longlat +datum=WGS84")
 
 # Transform to UTM Zone 7N to match your raster
-sites_utm <- spTransform(ald_only, crs(elevation))
-sites_utm <- spTransform(ald_only, crs(slope))
+sites_utm_ald <- spTransform(ald_only, crs(elevation))
+sites_utm_ald <- spTransform(ald_only, crs(slope))
 
 
 
@@ -72,9 +72,17 @@ plot(slope,
 points(sites_utm, pch = 4, col = "red2", cex = 1.5)
 
 # EXTRACT SLOPE VALUES AT ALD POINTS----
-slope_values <- extract(slope_terra, vect(sites_utm))
-slope_values_df <- as.data.frame(slope_values)
-slope_values_df
+slope_values <- terra::extract(slope_terra, vect(sites_utm_ald))
+slope_values_df_ald <- as.data.frame(slope_values)
+slope_values_df_ald
+
+# categorise slope values into bins
+slope_values_df_ald <- slope_values_df_ald %>% 
+  mutate(slope_category = case_when(
+    slope < 4 ~ "Flat",
+    slope >= 4 & slope < 7 ~ "Moderate",
+    slope >= 7  ~ "Steep"
+  ))
 
 # COMBINE ELEVATION AND SLOPE DATAFRAMES----
 ald_elevation_slope_coordinates_ <- read_excel("~/dissertation_2026_bestington/datasets/QHI_roots_data/ald_elevation_slope_coordinates .xlsx")
@@ -136,3 +144,47 @@ ggplot(ald_elevation_slope_coordinates_last_day, aes(x = slope, y = thaw_av, col
 # could be due to steeper slopes having better drainage and thus less insulating water content in the soil, leading to deeper thaw (drier soil conduct heat better)
 # but we also need to acknowledge that slope degree only to 7 degrees, so we are not talking about very steep slopes here, and the relationship is not super strong, so this is just a hypothesis to explore further with more data and analysis
 # ideally would need steeper slopes but this puts researchers in field at risk especially with active layer detatchments occuring 
+
+# PLOT CHANGE IN ALD THAW DEPTH FROM 2023 TO 2024 AGAINST SLOPE----
+percent_change_ald <- read_excel("datasets/QHI_roots_data/percent_change_ald.xlsx")
+# remove na
+percent_change_ald <- percent_change_ald %>% drop_na(percent_change)
+
+# aggregate percentage change data by slope category
+# Aggregate change in active layer thaw across subplots
+ald_summary <- percent_change_ald %>%
+  group_by(slope_category) %>%
+  summarise(
+    sum_percent_change = sum(percent_change, na.rm = TRUE),  # or sum() if you prefer total change
+    .groups = "drop"
+  )
+
+# Create the plot
+ggplot(ald_summary, aes(x = slope_category, y = sum_percent_change)) +
+  geom_col(position = "dodge") +
+  geom_hline(yintercept = 0, linewidth = 0.5, color = "black") +
+  labs(
+    x = "Slope Category",
+    y = "Change in Active Layer Depth (%)"
+  ) +
+  theme_classic() +
+  theme(
+    axis.line.x = element_line(color = "black"),
+    panel.grid.major.x = element_blank()
+  )
+
+# n=16 for all slope categories combined 
+
+# # scatter plot
+ggplot(percent_change_ald, aes(x = slope, y = percent_change)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(
+    x = "Slope (degrees)",
+    y = "Change in Active Layer Depth (%)"
+  ) +
+  theme_classic() +
+  theme(
+    axis.line.x = element_line(color = "black"),
+    panel.grid.major.x = element_blank()
+  )
