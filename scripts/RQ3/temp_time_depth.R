@@ -10,7 +10,7 @@ library(readxl)
 library(dplyr)
 
 # LOAD DATA----
-clean_control_exp_data <- read_excel("dissertation_2026_bestington/datasets/lab_experiment/clean_control_exp_data.xlsx")
+clean_control_exp_data <- read_excel("~dissertation_2026_bestington/datasets/lab_experiment/clean_control_exp_data.xlsx")
 clean_control_exp_data <- read_excel("datasets/lab_experiment/clean_control_exp_data.xlsx")
 
 # FIGURE AS FACET WRAP ----
@@ -56,6 +56,27 @@ clean_control_exp_data <- read_excel("datasets/lab_experiment/clean_control_exp_
       legend.title = element_text(size = 12),
       legend.text = element_text(size = 10)
     )
+)
+
+(change_temp_time <- clean_control_exp_data %>%
+  filter(!is.na(change_in_temp), !is.na(hour)) %>%
+  ggplot(aes(x = hour, y = change_in_temp, color = depth, group = depth)) +
+  geom_line() +
+  geom_point(size = 2) +
+  scale_color_gradient(high = "#132B43", low = "#56B1F7") +  # dark to light
+  labs(
+    x = "Time (hours)",
+    y = "Difference in Temperature (°C)",
+    color = "Depth (cm)"
+  ) +
+  theme_classic() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14),
+    legend.title = element_text(size = 12),
+    legend.text = element_text(size = 10)
+  )
 )
 # difference greatest in first 24 hours- correlates with rapid thawing of experimental but retention of cold/frozenness in control 
 # due to polystrene that is insulating control 
