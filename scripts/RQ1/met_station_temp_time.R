@@ -20,6 +20,13 @@ met_station_avg <- met_station_combined %>%
     sd_temp = sd(air_temp, na.rm = TRUE)
   )
 
+# max daily temps for each doy
+met_station_max <- met_station_combined %>%
+  group_by(year, doy) %>%
+  summarise(
+    max_temp = max(air_temp, na.rm = TRUE)
+  )
+
 # PLOT DATA----
 (ggplot(met_station_combined, aes(x = doy, y = air_temp, color = as.factor(year))) +
    geom_point(alpha = 0.1) +
@@ -43,7 +50,7 @@ met_station_avg <- met_station_combined %>%
 # quite a messy graph above, but trying to show comparison of years and that 2023 was on average hotter 
 # but do i already show this from ERA5 anomaly map?
 
-# PLOT JUST 2023 DATA----
+# PLOT JUST 2023 MAX TEMP DATA----
 (ggplot(filter(met_station_combined, year == 2023), aes(x = doy, y = air_temp)) +
     geom_point(alpha = 0.1, color = "brown3") +
     geom_line(stat = "summary", fun = "max" , color = "brown3") + 
@@ -58,3 +65,15 @@ met_station_avg <- met_station_combined %>%
 # just 2023 data to show how long heatwaves were for that summer 
 # Canada met office states over 22C for more than 2 consecutive days 
 # in diss doc circle/annotate peaks 
+
+# PLOT JUST 2023 AV TEMP DATA----
+(ggplot(filter(met_station_avg, year == 2023), aes(x = doy, y = avg_temp)) +
+   geom_point(color = "brown3", size = 2, alpha=0.5) +
+    geom_line(color = "brown3", size = 1) +
+    geom_hline(yintercept = 22, linetype = "dashed",
+               color = "black", linewidth = 1)+
+    labs(x = "Day of Year",
+         y = "Average Air Temperature (°C)") +
+    theme_classic()+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+)
