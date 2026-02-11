@@ -25,8 +25,12 @@ QHI_combined_data <- QHI_combined_data %>%
 # removed outlier row 32 which had rootmass_bulkdensity of 5.98 g/cm3, likely a data entry error 
 # see notebook for further laboratory explanation 
 
-# FIGURE -----
-(community_biomass_year <- QHI_combined_data %>%
+# FILTER FOR JUST P3----
+QHI_combined_data_P3 <- QHI_combined_data %>%
+  filter(core_ID == "P3")
+
+# FIGURE P3s only-----
+(community_biomass_year <- QHI_combined_data_P3 %>%
   filter(year %in% c(2023, 2024)) %>%
   ggplot(aes(x = community, y = rootmass_bulkdensity, fill = as.factor(year))) +
   geom_boxplot(position = position_dodge(width = 0.8), alpha = 0.7) +
@@ -39,8 +43,23 @@ QHI_combined_data <- QHI_combined_data %>%
   theme_classic()
 )
 
+
+# FIGURE ORIGINAL----
+(community_biomass_year_all <- QHI_combined_data %>%
+   filter(year %in% c(2023, 2024)) %>%
+   ggplot(aes(x = community, y = rootmass_bulkdensity, fill = as.factor(year))) +
+   geom_boxplot(position = position_dodge(width = 0.8), alpha = 0.7) +
+   labs(
+     x = "Community",
+     y = "Root Biomass Density (g cm⁻³)",
+     fill = "Year") +
+   scale_fill_manual(values = c("2023" = "deepskyblue3", "2024" = "brown3")) +
+   scale_y_continuous(labels = scales::label_number(accuracy = 0.1)) +
+   theme_classic()
+)
+
 # FIGURE 2 IDEA----
-(year_biomass_community<-QHI_combined_data %>%
+(year_biomass_community<-QHI_combined_data_P3 %>%
     filter(year %in% c(2023, 2024)) %>%
     ggplot(aes(x = as.factor(year), y = rootmass_bulkdensity, fill = community)) +
     geom_boxplot(position = position_dodge(width = 0.8), alpha = 0.7) +

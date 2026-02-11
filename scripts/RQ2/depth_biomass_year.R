@@ -21,10 +21,13 @@ QHI_combined_data <- QHI_combined_data %>%
 # removed outlier row 32 which had rootmass_bulkdensity of 5.98 g/cm3, likely a data entry error 
 # see notebook for further laboratory explanation 
 
+# FILTER P3 ONLY----
+QHI_combined_data_P3 <- QHI_combined_data %>%
+  filter(core_ID == "P3")
 
 
 # FIGURE----
-(depth_biomass_year<-QHI_combined_data %>%
+(depth_biomass_year<-QHI_combined_data_P3 %>%
    filter(year %in% c(2023, 2024)) %>%
    filter(!is.na(max_depth_increment), !is.na(root_dry_biomass_total)) %>%
    filter(max_depth_increment != "N/A") %>%
@@ -65,7 +68,7 @@ QHI_combined_data <- QHI_combined_data %>%
 # but then need to be careful if its due to heatwaves or just general increases in temp due too CC, hence doing short term year to year analysis better for understanding short term heatwaves impact? So this stuyd is important
 
 # FIGURE COMMUNITY, BIOMASS, DEPTH----
-(depth_biomass_community_year <- QHI_combined_data %>%
+(depth_biomass_community_year <- QHI_combined_data_P3 %>%
     filter(year %in% c(2023, 2024)) %>%
     filter(!is.na(max_depth_increment), !is.na(root_dry_biomass_total)) %>%
     filter(max_depth_increment != "N/A") %>%
