@@ -66,7 +66,7 @@ anomaly_df <- anomaly_df[order(anomaly_df$lon, anomaly_df$lat), ]
 world <- ne_countries(scale = "medium", returnclass = "sf")
 
 # Create the plot
-p <- ggplot() +
+world_2024 <- ggplot() +
   geom_tile(data = anomaly_df, aes(x = lon, y = lat, fill = anomaly)) +
   geom_sf(data = world, fill = NA, color = "black", linewidth = 0.3) +
   scale_fill_gradientn(
@@ -91,14 +91,14 @@ p <- ggplot() +
     legend.position = "right",
     legend.key.height = unit(1.5, "cm"),
     legend.key.width = unit(0.5, "cm"),
-    legend.title = element_text(size = 12, face = "bold"),
+    legend.title = element_text(size = 9, face = "bold"),
     legend.text = element_text(size = 10),
     panel.grid.major = element_line(color = "grey90", linewidth = 0.2),
     panel.background = element_blank(),
     plot.background = element_rect(fill = "white", color = NA)
   )
 
-print(p)
+print(world_2024)
 
 # Save
 ggsave("surface_air_temp_anomaly_july_2024.png", 
@@ -212,7 +212,7 @@ world <- ne_countries(scale = "large", returnclass = "sf")  # Use 'large' for mo
 states <- ne_states(country = c("canada", "united states of america"), returnclass = "sf")
 
 # Create zoomed plot
-p_zoom <- ggplot() +
+QHI_2024 <- ggplot() +
   geom_tile(data = anomaly_zoom, aes(x = lon, y = lat, fill = anomaly)) +
   geom_sf(data = world, fill = NA, color = "black", linewidth = 0.5) +
   geom_sf(data = states, fill = NA, color = "grey50", linewidth = 0.3) +
@@ -249,7 +249,7 @@ p_zoom <- ggplot() +
     plot.background = element_rect(fill = "white", color = NA)
   )
 
-print(p_zoom)
+print(QHI_2024)
 
 # Save
 ggsave("herschel_island_temp_anomaly_july_2024.png", 
@@ -334,39 +334,39 @@ tm2m_2023_c <- tm2m_2023 - 273.15
 t2m_baseline_c <- t2m_baseline - 273.15
 
 # Calculate anomaly
-anomaly <- tm2m_2023_c - t2m_baseline_c
+anomaly_2023 <- tm2m_2023_c - t2m_baseline_c
 
 # Check the range again
-print(global(anomaly, "range", na.rm = TRUE))
+print(global(anomaly_2023, "range", na.rm = TRUE))
 
 # Convert to dataframe for plotting
-anomaly_df <- as.data.frame(anomaly, xy = TRUE, na.rm = FALSE)
-names(anomaly_df) <- c("lon", "lat", "anomaly")
+anomaly_df_2023 <- as.data.frame(anomaly_2023, xy = TRUE, na.rm = FALSE)
+names(anomaly_df_2023) <- c("lon", "lat", "anomaly")
 
 # Remove any infinite or NA values
-anomaly_df <- anomaly_df[is.finite(anomaly_df$anomaly), ]
+anomaly_df_2023 <- anomaly_df_2023[is.finite(anomaly_df_2023$anomaly), ]
 
 # Check the data
-summary(anomaly_df$anomaly)
-head(anomaly_df)
+summary(anomaly_df_2023$anomaly)
+head(anomaly_df_2023)
 
 # Your anomaly data (assuming you already have anomaly_df)
 # Check the distribution
-quantile(anomaly_df$anomaly, probs = seq(0, 1, 0.1))
+quantile(anomaly_df_2023$anomaly, probs = seq(0, 1, 0.1))
 
 
 # Convert longitude from 0-360 to -180-180
-anomaly_df$lon <- ifelse(anomaly_df$lon > 180, anomaly_df$lon - 360, anomaly_df$lon)
+anomaly_df_2023$lon <- ifelse(anomaly_df_2023$lon > 180, anomaly_df_2023$lon - 360, anomaly_df_2023$lon)
 
 # Now sort by longitude to avoid plotting issues
-anomaly_df <- anomaly_df[order(anomaly_df$lon, anomaly_df$lat), ]
+anomaly_df_2023 <- anomaly_df_2023[order(anomaly_df_2023$lon, anomaly_df_2023$lat), ]
 
 # Get world map
 world <- ne_countries(scale = "medium", returnclass = "sf")
 
 # Create the plot
 july_2023 <- ggplot() +
-  geom_tile(data = anomaly_df, aes(x = lon, y = lat, fill = anomaly)) +
+  geom_tile(data = anomaly_df_2023, aes(x = lon, y = lat, fill = anomaly)) +
   geom_sf(data = world, fill = NA, color = "black", linewidth = 0.3) +
   scale_fill_gradientn(
     colors = c("#000080", "#4169E1", "#87CEEB", "#FFFFCC", 
@@ -412,18 +412,18 @@ lat_min <- 68
 lat_max <- 71
 
 # Filter your anomaly data to this region
-anomaly_zoom <- anomaly_df[anomaly_df$lon >= lon_min & 
-                             anomaly_df$lon <= lon_max & 
-                             anomaly_df$lat >= lat_min & 
-                             anomaly_df$lat <= lat_max, ]
+anomaly_zoom_2023 <- anomaly_df_2023[anomaly_df_2023$lon >= lon_min & 
+                             anomaly_df_2023$lon <= lon_max & 
+                             anomaly_df_2023$lat >= lat_min & 
+                             anomaly_df_2023$lat <= lat_max, ]
 
 # Get more detailed map data for North America
 world <- ne_countries(scale = "large", returnclass = "sf")  # Use 'large' for more detail
 states <- ne_states(country = c("canada", "united states of america"), returnclass = "sf")
 
 # Create zoomed plot
-p_zoom <- ggplot() +
-  geom_tile(data = anomaly_zoom, aes(x = lon, y = lat, fill = anomaly)) +
+QHI_2023 <- ggplot() +
+  geom_tile(data = anomaly_zoom_2023, aes(x = lon, y = lat, fill = anomaly)) +
   geom_sf(data = world, fill = NA, color = "black", linewidth = 0.5) +
   geom_sf(data = states, fill = NA, color = "grey50", linewidth = 0.3) +
   # Add a point for Herschel Island
@@ -461,7 +461,7 @@ p_zoom <- ggplot() +
     plot.background = element_rect(fill = "white", color = NA)
   )
 
-print(p_zoom)
+print(QHI_2023)
 
 # Save
 ggsave("herschel_island_temp_anomaly_july_2023.png", 
@@ -471,6 +471,10 @@ ggsave("herschel_island_temp_anomaly_july_2023.png",
        dpi = 300,
        bg = "white")
 
+# COMBINE ALL 4 TOGTEHER----
+library(patchwork)
+combined_plot <- (july_2023 / QHI_2023) | (world_2024 / QHI_2024)
+print(combined_plot)
 
 # CHANGE WD BACK ----
 setwd("C:/Users/ellie/OneDrive/Documents/dissertation_2026_bestington")
