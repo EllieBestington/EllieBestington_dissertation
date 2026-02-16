@@ -100,7 +100,7 @@ bartlett.test(thaw_av ~ year, data = ald_all_years)
 
 # ACTIVE LAYER PAST YEARS----
 # incls years post large thaw in 2023 
-(ald_all_years<-ald_all_years %>%
+(ald_all_years_plot<-ald_all_years %>%
     ggplot(aes(x = year, y = thaw_av)) +
     geom_point(alpha = 0.5) +
     geom_smooth(method = "lm")+
@@ -139,6 +139,9 @@ hist(residuals(mod1))
 # do figure removing years 2024 and 2025 to see how its been increasing ALD 
 ald_pre2023 <- ald_all_years %>%
   filter(year %in% c(1986:2023))
+
+
+
 (ald_pre2023_plot<-ald_pre2023 %>%
     ggplot(aes(x = year, y = thaw_av)) +
     geom_point(alpha = 0.5) +
@@ -172,3 +175,8 @@ summary(mod2)
   # why- slumps typically occur where thaw is deepest and ice lens becomes unstable - literature 
   # when deep thaw areas detatch and slide away, left measuring shallower more stable areas, hence reducing active layer depth in 2024 and 2025 
 
+
+# COMBINE FIGURES----
+library(patchwork)
+combined_ald_plot<- ald_pre2023_plot | ald_all_years_plot
+combined_ald_plot
