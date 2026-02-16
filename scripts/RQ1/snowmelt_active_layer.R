@@ -32,11 +32,10 @@ snowmelt_dates <- snowmelt_dates %>% mutate(year = as.factor(year))
 
 
 # PLOT DATA SNOWMELT DATA ONLY----
-(snowmelt_dates_fig<-ggplot(snowmelt_dates, aes(x = year, y = doy, fill = year )) +
+(snowmelt_dates_fig<-ggplot(snowmelt_dates, aes(x = year, y = doy )) +
   geom_jitter(width = 0.2, alpha = 0.7) +
   geom_boxplot(position = position_dodge(width = 0.8), alpha = 0.5) +
   labs(x = "Year", y = "DoY 100% Snow Free") +
-  scale_fill_manual(values = c("2022" = "skyblue", "2023" = "skyblue2", "2024"= "skyblue4"))+
   theme_classic() +
   theme(legend.position = "none")
   
