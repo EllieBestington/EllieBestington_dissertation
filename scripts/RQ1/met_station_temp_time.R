@@ -27,20 +27,20 @@ met_station_max <- met_station_combined %>%
     max_temp = max(air_temp, na.rm = TRUE)
   )
 
-# PLOT DATA----
-(ggplot(met_station_combined, aes(x = doy, y = air_temp, color = as.factor(year))) +
-   geom_point(alpha = 0.1) +
-    geom_line(stat = "summary", fun = "max") +
-    geom_smooth(method = "lm", se = FALSE, linewidth = 1)+
-    geom_hline(yintercept = 22, linetype = "dashed", color = "black", linewidth = 1)+
-    labs(title = "Max Daily Air Temperature by Day of Year",
-         x = "Day of Year",
-         y = "Air Temperature (°C)",
-         color= "Year") +
-    scale_colour_manual(values = c("2022" = "lightgreen","2023" = "brown3", "2024" = "skyblue3")) +
-    theme_classic()+
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
-)
+# PLOT 2023 and 2024 only----
+# plot 2023 and 2024 data only
+max_2023_2024<-ggplot(filter(met_station_combined, year %in% c(2023, 2024)), aes(x = doy, y = air_temp, color = factor(year))) +
+  geom_point(alpha = 0.1) +
+  geom_line(stat = "summary", fun = "max") + 
+  geom_hline(yintercept = 22, linetype = "dashed",
+             color = "black", linewidth = 1)+
+  labs(x = "Day of Year",
+       y = "Air Temperature (°C)",
+       color = "Year") +
+  scale_color_manual(values = c("brown3", "steelblue")) +
+  theme_classic()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
 
 # each line of data represents one day
 # line at 22C, Canadian government classification of heatwave in QHI provience for more than 2 days 
@@ -51,7 +51,7 @@ met_station_max <- met_station_combined %>%
 # but do i already show this from ERA5 anomaly map?
 
 # PLOT JUST 2023 MAX TEMP DATA----
-(ggplot(filter(met_station_combined, year == 2023), aes(x = doy, y = air_temp)) +
+(temp_2023<-ggplot(filter(met_station_combined, year == 2023), aes(x = doy, y = air_temp)) +
     geom_point(alpha = 0.1, color = "brown3") +
     geom_line(stat = "summary", fun = "max" , color = "brown3") + 
     geom_hline(yintercept = 22, linetype = "dashed",
@@ -65,6 +65,20 @@ met_station_max <- met_station_combined %>%
 # just 2023 data to show how long heatwaves were for that summer 
 # Canada met office states over 22C for more than 2 consecutive days 
 # in diss doc circle/annotate peaks 
+
+
+# PLOT JUST 2024 MAX TEMP DATA----
+(temp_2024<-ggplot(filter(met_station_combined, year == 2024), aes(x = doy, y = air_temp)) +
+   geom_point(alpha = 0.1, color = "steelblue") +
+   geom_line(stat = "summary", fun = "max" , color = "steelblue") + 
+   geom_hline(yintercept = 22, linetype = "dashed",
+              color = "black", linewidth = 1)+
+   labs(x = "Day of Year",
+        y = "Air Temperature (°C)") +
+   theme_classic()+
+   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+)
+
 
 # PLOT JUST 2023 AV TEMP DATA----
 (ggplot(filter(met_station_avg, year == 2023), aes(x = doy, y = avg_temp)) +
