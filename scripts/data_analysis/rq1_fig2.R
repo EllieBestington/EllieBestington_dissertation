@@ -54,3 +54,18 @@ t.test(max_temp ~ year_factor, data = daily_max_temp)
 # difference of 2.59C but only marginally significant p=0.065 (not quite below 0.05 threshold)
 # trending towards 2023 summer being warmer than 2024
 # 2023 summer averaged 2.6°C warmer than 2024, though this difference was marginally non-significant (p = 0.065)
+# CHECK ASSUMPTIONS----
+# only required for 1.1
+
+# Check normality of residuals
+residuals <- model1$residuals
+shapiro.test(residuals)
+# NORMAL p=0.2094
+
+# Check homogeneity of variances
+library(car)
+leveneTest(max_temp ~ year_factor, data = daily_max_temp)
+# Welch test actually good to use here as variances are unequal - use welch test
+
+plot(model1)# Residuals vs Fitted
+hist(residuals,main = "Histogram of Residuals", xlab = "Residuals")
