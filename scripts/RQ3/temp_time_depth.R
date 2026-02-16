@@ -14,7 +14,10 @@ clean_control_exp_data <- read_excel("~dissertation_2026_bestington/datasets/lab
 clean_control_exp_data <- read_excel("datasets/lab_experiment/clean_control_exp_data.xlsx")
 
 # FIGURE AS FACET WRAP ----
-(rq2_fac5et_temp_time<-ggplot(clean_control_exp_data, aes(x = hour, y = temp, color = type)) +
+(rq2_fac5et_temp_time<-clean_control_exp_data %>%
+   filter(!is.na(temp), !is.na(hour)) %>%
+   filter(hour >= 24) %>% # filter to remove first day as initial thawing period where temp changes due limited thawing from control)
+ ggplot(aes(x = hour, y = temp, color = type)) +
   geom_line(size = 1) +
   geom_point(size = 2) +
   labs(
@@ -58,8 +61,11 @@ clean_control_exp_data <- read_excel("datasets/lab_experiment/clean_control_exp_
     )
 )
 
+# filter for just hours 24 to 103
+
 (change_temp_time <- clean_control_exp_data %>%
   filter(!is.na(change_in_temp), !is.na(hour)) %>%
+  filter(hour >= 24) %>% # filter to remove first day as initial thawing period where temp changes are due limited thawing from control
   ggplot(aes(x = hour, y = change_in_temp, color = depth, group = depth)) +
   geom_line() +
   geom_point(size = 2) +
@@ -78,6 +84,7 @@ clean_control_exp_data <- read_excel("datasets/lab_experiment/clean_control_exp_
     legend.text = element_text(size = 10)
   )
 )
+
 # difference greatest in first 24 hours- correlates with rapid thawing of experimental but retention of cold/frozenness in control 
 # due to polystrene that is insulating control 
 # then settles into more cyclic pattern after initial thawing period
