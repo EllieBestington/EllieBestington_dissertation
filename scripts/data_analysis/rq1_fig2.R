@@ -67,5 +67,7 @@ library(car)
 leveneTest(max_temp ~ year_factor, data = daily_max_temp)
 # Welch test actually good to use here as variances are unequal - use welch test
 
+bartlett.test(max_temp ~ year_factor, data = daily_max_temp)
+
 plot(model1)# Residuals vs Fitted
 hist(residuals,main = "Histogram of Residuals", xlab = "Residuals")
