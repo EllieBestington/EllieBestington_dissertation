@@ -90,3 +90,96 @@ QHI_combined_data_P3 <- QHI_combined_data %>%
 # in 2023 graminoids actually show a decrease with depth! Opposite to what would usually think with graminoids that are deeper rooting
 # in 2024/post heatwave shrub doesn't look like its changed but mix shows a large increase in biomass with depth
 # no data for graminoids in 2024 yet but hopefully large increase with depth (and hence what is driving the mix increase)
+
+# FIGURE COMMUNITY, BIOMASS, DEPTH WITHOUT 30 CM----
+(depth_biomass_community_year_no30 <- QHI_combined_data_P3 %>%
+    filter(year %in% c(2023, 2024)) %>%
+    filter(!is.na(max_depth_increment), !is.na(root_dry_biomass_total)) %>%
+    filter(max_depth_increment != "N/A") %>%
+    filter(max_depth_increment != "30") %>%
+    mutate(max_depth_increment = factor(max_depth_increment, 
+                                        levels = c("5", "10", "15", "20", "25"))) %>%
+    ggplot(aes(x = max_depth_increment, y = rootmass_bulkdensity
+               , colour = community)) +
+   geom_smooth(aes(group = community), method = "lm", se = TRUE)+
+    geom_point(alpha = 0.7) +
+    facet_wrap(~year) +
+    labs(
+      x = "Depth (cm)",
+      y = "Root Biomass Density (g cm⁻³)",
+      colour = "Community") +
+    scale_colour_manual(values = c("Graminoid" = "#E69F00",
+                                   "Shrub" = "#009E73",
+                                   "Mix"="#CC79A7"))+
+    theme_classic()
+)
+
+# add line following max root biomass density for each depth for each community to figure above
+
+# FIGURE COMMUNITY, BIOMASS, YEAR, NO 30 CM, MAX POINTS-----
+(depth_biomass_community_year_no30 <- QHI_combined_data_P3 %>%
+   filter(year %in% c(2023, 2024)) %>%
+   filter(!is.na(max_depth_increment), !is.na(root_dry_biomass_total)) %>%
+   filter(max_depth_increment != "N/A") %>%
+   filter(max_depth_increment != "30") %>%
+   mutate(max_depth_increment = factor(max_depth_increment, 
+                                       levels = c("5", "10", "15", "20", "25"))) %>%
+   ggplot(aes(x = max_depth_increment, y = rootmass_bulkdensity
+              , colour = community)) +
+   geom_smooth(aes(group = community), method = "lm", se = TRUE)+
+   geom_point(alpha = 0.7) +
+   stat_summary(aes(group = community), 
+                fun = max, 
+                geom = "line", 
+                linewidth = 0.5,
+                linetype = "dashed") +
+   stat_summary(aes(group = community), 
+                fun = max, 
+                geom = "point", 
+                size = 3,
+                shape = 1) +
+   facet_wrap(~year) +
+   labs(
+     x = "Depth (cm)",
+     y = "Root Biomass Density (g cm⁻³)",
+     colour = "Community") +
+   scale_colour_manual(values = c("Graminoid" = "#E69F00",
+                                  "Shrub" = "#009E73",
+                                  "Mix"="#CC79A7"))+
+   theme_classic()
+)
+
+
+
+# FIGURE COMMUNITY, BIOMASS, YEAR WITH 30 CM BUT MAX BIOMASS POINTS----
+(depth_biomass_community_year_max <- QHI_combined_data_P3 %>%
+  filter(year %in% c(2023, 2024)) %>%
+  filter(!is.na(max_depth_increment), !is.na(root_dry_biomass_total)) %>%
+  filter(max_depth_increment != "N/A") %>%
+  mutate(max_depth_increment = factor(max_depth_increment, 
+                                      levels = c("5", "10", "15", "20", "25", "30"))) %>%
+  ggplot(aes(x = max_depth_increment, y = rootmass_bulkdensity, 
+             colour = community)) +
+  geom_smooth(aes(group = community), method = "lm", se = TRUE) +
+  geom_point(alpha = 0.7) +
+  stat_summary(aes(group = community), 
+               fun = max, 
+               geom = "line", 
+               linewidth = 0.5,
+               linetype = "dashed") +
+  stat_summary(aes(group = community), 
+               fun = max, 
+               geom = "point", 
+               size = 3,
+               shape = 1) +  # triangle markers for max points
+  facet_wrap(~year) +
+  labs(
+    x = "Depth (cm)",
+    y = "Root Biomass Density (g cm⁻³)",
+    colour = "Community") +
+  scale_colour_manual(values = c("Graminoid" = "#E69F00",
+                                 "Shrub" = "#009E73",
+                                 "Mix" = "#CC79A7")) +
+  theme_classic()
+)
+      
