@@ -157,25 +157,6 @@ ald_pre2023 <- ald_all_years %>%
  
 
 
-
-mod2 <- lm(thaw_av ~ as.numeric(as.character(year)), data = ald_pre2023)
-summary(mod2)
-# p <0,0001 - highly significant
-# strong increasing trend - thaw depth increasing by 0.68 cm per year 
-# r2 = 0.24, not amazing but good for natural data 
-# means something happened in 2023- i.e. the thawing!
-  # Pre-2023: Clear, strong increasing trend in thaw depth (deeper thawing over time)
-  # Full dataset: Weak decreasing trend overall
-
-# why? - multiple reasons we think
-# 1. 2023 was an anomalous year with extreme heatwave causing unprecedented thawing- evidenced 
-# 2. colder winters in 2024 delayed snowmelt (shown by later 100% snow free dates)- evidenced 
-# 3. this caused a shorter thaw season, leading to shallower maximum thaw depth 
-# 4. the active layer detachments/alds observed in 2023 remove the deepest thaw zones
-  # why- slumps typically occur where thaw is deepest and ice lens becomes unstable - literature 
-  # when deep thaw areas detatch and slide away, left measuring shallower more stable areas, hence reducing active layer depth in 2024 and 2025 
-
-
 # COMBINE FIGURES----
 library(patchwork)
 combined_ald_plot<- ald_pre2023_plot | ald_all_years_plot
