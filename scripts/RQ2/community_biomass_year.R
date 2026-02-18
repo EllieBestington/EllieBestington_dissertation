@@ -38,7 +38,7 @@ QHI_combined_data_P3 <- QHI_combined_data %>%
     x = "Community",
     y = "Root Biomass Density (g cm⁻³)",
     fill = "Year") +
-  scale_fill_manual(values = c("2023" = "deepskyblue3", "2024" = "brown3")) +
+  scale_fill_manual(values = c("2023" = "brown3", "2024" = "steelblue")) +
   scale_y_continuous(labels = scales::label_number(accuracy = 0.1)) +
   theme_classic()
 )
