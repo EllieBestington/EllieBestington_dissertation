@@ -29,7 +29,7 @@ met_station_max <- met_station_combined %>%
 
 # PLOT 2023 and 2024 only----
 # plot 2023 and 2024 data only
-max_2023_2024<-ggplot(filter(met_station_combined, year %in% c(2023, 2024)), aes(x = doy, y = air_temp, color = factor(year))) +
+(max_2023_2024<-ggplot(filter(met_station_combined, year %in% c(2023, 2024)), aes(x = doy, y = air_temp, color = factor(year))) +
   geom_point(alpha = 0.1) +
   geom_line(stat = "summary", fun = "max") + 
   geom_hline(yintercept = 22, linetype = "dashed",
@@ -37,9 +37,15 @@ max_2023_2024<-ggplot(filter(met_station_combined, year %in% c(2023, 2024)), aes
   labs(x = "Day of Year",
        y = "Air Temperature (°C)",
        color = "Year") +
+   annotate("rect", 
+            xmin = 223, xmax = 225,  # adjust width as needed
+            ymin = -Inf, ymax = Inf,
+            alpha = 0.3, 
+            fill = "yellow") + # or any color you want
   scale_color_manual(values = c("brown3", "steelblue")) +
   theme_classic()+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+)
 
 
 # each line of data represents one day
