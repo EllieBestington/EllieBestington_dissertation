@@ -33,6 +33,16 @@ summary(mod1)
 # p value < 0.001
 # R2= 0.2366 -> good for natural systems with lots of other variables influencing the outcome.
 
+
+# check assumptions 
+shapiro.test(mod1$residuals) 
+hist(mod1$residuals)
+# shapiro test said not normal but from looking at histogram and plots, residuals look reasonably normal, so we can proceed with the model.(include in appendix)
+
+# bartletts test for homogeneity of variance
+bartlett.test(thaw_av ~ as.factor(year), data = ald_pre2023)
+
+
 # DATA ANALYSIS INCLUDING 2024/25----
 mod2<-lm(thaw_av ~ year, data = ald_all_years)
 summary(mod2)
@@ -42,3 +52,8 @@ summary(mod2)
 # now decreasing active of -0.10 cm per year 
 # r2= 0.004348, very weak relationship now 
 # essentially this is showing that active layers in 2024 much shallower than 2023
+
+# check assumptions 
+shapiro.test(mod2$residuals)
+hist(mod2$residuals)
+# again pretty normal when plot as histogram 
