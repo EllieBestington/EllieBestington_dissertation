@@ -39,12 +39,29 @@ summary(mod1)
 # No significant difference among communities (p = 0.296)
 # Root mass bulk density is similar across years and community types
 
+# check assumptions 
+shapiro.test(mod1$residuals)
+hist(mod1$residuals) 
+# not normal 
 
-# Now let's split it up by community type 
+# CUBE ROOT DATA
+QHI_combined_data_P3 <- QHI_combined_data_P3 %>%
+  mutate(rootmass_bulkdensity_cuberoot = rootmass_bulkdensity^(1/3))
+mod1_cuberoot <- aov(rootmass_bulkdensity_cuberoot ~ as.character(year) + community, data = QHI_combined_data_P3)
+summary(mod1_cuberoot)
+
+shapiro.test(mod1_cuberoot$residuals)
+hist(mod1_cuberoot$residuals)
+# now normal 
+
+bartlett.test(rootmass_bulkdensity_cuberoot ~ as.factor(year), data = QHI_combined_data_P3)
+
+
+# Now let's split it up by community type- using cube root data to meet assumptions 
 # Shrub: is there a significant difference in shrub root biomass between 2023 and 2024?
 QHI_shrub_data <- QHI_combined_data_P3 %>%
   filter(community == "Shrub")
-mod_shrub <- aov(rootmass_bulkdensity ~ as.character(year), data = QHI_shrub_data)
+mod_shrub <- aov(rootmass_bulkdensity_cuberoot ~ as.character(year), data = QHI_shrub_data)
 summary(mod_shrub)
 # No significant difference in shrub root biomass between 2023 and 2024 (p = 0.397)
 # no significant change (i.e. decrease) but most decrease out of all communties, so may be a trend to watch for in future years
@@ -53,7 +70,7 @@ summary(mod_shrub)
 # Mix: is there a significant difference in mix root biomass between 2023 and 2024?
 QHI_mix_data <- QHI_combined_data_P3 %>%
   filter(community == "Mix")
-mod_mix <- aov(rootmass_bulkdensity ~ as.character(year), data = QHI_mix_data)
+mod_mix <- aov(rootmass_bulkdensity_cuberoot ~ as.character(year), data = QHI_mix_data)
 summary(mod_mix)
 # No significant difference in mix root biomass between 2023 and 2024 (p = 0.966)
 
