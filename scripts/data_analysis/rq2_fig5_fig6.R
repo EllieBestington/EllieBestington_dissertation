@@ -7,7 +7,7 @@ library(tidyverse)
 library(ggplot2)
 library(readxl)
 library(lme4)
-library(lmer)
+
 
 
 # LOAD DATA----
@@ -55,6 +55,10 @@ hist(mod1_cuberoot$residuals)
 # now normal 
 
 bartlett.test(rootmass_bulkdensity_cuberoot ~ as.factor(year), data = QHI_combined_data_P3)
+
+# test using lmer USE THIS LINEAR MIXED MODEL INSTEAD!!
+mod3<- lmer(rootmass_bulkdensity_cuberoot ~ as.character(year) + community + (1 | subplot), data = QHI_combined_data_P3)
+summary(mod3)
 
 
 # Now let's split it up by community type- using cube root data to meet assumptions 
