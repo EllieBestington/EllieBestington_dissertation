@@ -61,7 +61,7 @@ mod3<- lmer(rootmass_bulkdensity_cuberoot ~ as.character(year) + community + (1 
 summary(mod3)
 
 
-# Now let's split it up by community type- using cube root data to meet assumptions 
+# Now let's split it up by community type- using cube root data to meet assumptions, and change to lmer by adding subplot as random  
 # Shrub: is there a significant difference in shrub root biomass between 2023 and 2024?
 QHI_shrub_data <- QHI_combined_data_P3 %>%
   filter(community == "Shrub")
@@ -70,6 +70,9 @@ summary(mod_shrub)
 # No significant difference in shrub root biomass between 2023 and 2024 (p = 0.397)
 # no significant change (i.e. decrease) but most decrease out of all communties, so may be a trend to watch for in future years
 
+# use lmer to account for subplot as random effect
+mod_shrub_lmer <- lmer(rootmass_bulkdensity_cuberoot ~ as.character(year) + (1 | subplot), data = QHI_shrub_data)
+summary(mod_shrub_lmer)
 
 # Mix: is there a significant difference in mix root biomass between 2023 and 2024?
 QHI_mix_data <- QHI_combined_data_P3 %>%
@@ -79,7 +82,7 @@ summary(mod_mix)
 # No significant difference in mix root biomass between 2023 and 2024 (p = 0.966)
 
 # Graminoid: is there a significant difference in graminoid root biomass between 2023 and 2024?
-# Can't do yet as no 2024 data 
+# Can't do yet as no 2024 data but will need to do lm as only two plots 
 # DATA ANALYSIS FIGURE 6- including 30cm ----
 # Is there a significant relationship between depth and root biomass in 2023 vs 2024 by community type?
 # i.e. comparison of biomass:depth relationship for shrubs, mix, and graminoid communities in 2023 vs 2024
