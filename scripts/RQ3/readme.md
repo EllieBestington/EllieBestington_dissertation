@@ -1,1 +1,1 @@
-# RQ3: To what extent can heatwave-induced soil thermal changes explain observed shifts in belowground root biomass distribution and functional group composition?
+# RQ2: How do heatwaves influence the distribution and functional group composition of belowground root biomass across different Arctic tundra plant communities?
