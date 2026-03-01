@@ -182,4 +182,3 @@ QHI_combined_data_P3 <- QHI_combined_data %>%
                                  "Mix" = "#CC79A7")) +
   theme_classic()
 )
-      
