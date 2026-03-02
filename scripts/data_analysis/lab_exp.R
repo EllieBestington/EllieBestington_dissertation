@@ -5,8 +5,8 @@
 library(tidyverse)
 library(ggplot2)
 library(readxl)
-library(forecast)
-library(colortools)
+library(mgcv) 
+
 
 # LOAD DATA----
 clean_control_exp_data <- read_excel("datasets/lab_experiment/clean_control_exp_data.xlsx")
@@ -58,23 +58,23 @@ clean_control_exp_data <- read_excel("datasets/lab_experiment/clean_control_exp_
 )
 
 # ANALYSIS----
-# Fit a linear model to test for significant differences in temperature change across depths and time
-lm_model <- lm(change_in_temp ~ hour * depth, data = clean_control_exp_data)
-summary(lm_model)
+# cannot use a linear model as our pattern isn't linear!
+# instead we should use: Generalized Additive Mixed Model (GAMM) to deal with this 
 
-# check model assumptions
-shapiro.test(residuals(lm_model)) # check normality of residuals
-hist(residuals(lm_model)) # visualize residuals
+#  stacked diurnal time series repeated over 4 days 
 
-# log transform the response variable to meet normality assumption
-clean_control_exp_data <- clean_control_exp_data %>%
-  mutate(log_change_in_temp = log(change_in_temp + abs(min(change_in_temp, na.rm = TRUE)) + 1)) # log transform with shift to handle negative values
+# create cyclic hour 
+clean_control_exp_data$hour_mod <- clean_control_exp_data$hour %% 24
 
-lm_model_log <- lm(log_change_in_temp ~ hour * depth, data = clean_control_exp_data)
-summary(lm_model_log)
+# create day variable
+clean_control_exp_data$day <- floor(clean_control_exp_data$hour / 24)
 
-shapiro.test(residuals(lm_model_log)) # check normality of residuals after log transformation
-hist(residuals(lm_model_log)) # visualize residuals after log transformation
-# better 
+# fit GAM
 
-
+mod2 <- gam(log_change_in_temp ~factor(depth) + s(hour_mod, by = factor(depth), bs = "cc", k = 5) +
+    s(day, bs = "re"),
+  data = clean_control_exp_data,
+  method = "REML"
+)
+summary(mod2)
+gam.check(mod2)
