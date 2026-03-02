@@ -7,6 +7,8 @@ library(tidyverse)
 library(ggplot2)
 library(readxl)
 library(lme4)
+library(lmerTest)
+library(emmeans)
 
 
 
@@ -56,33 +58,37 @@ hist(mod1_cuberoot$residuals)
 
 bartlett.test(rootmass_bulkdensity_cuberoot ~ as.factor(year), data = QHI_combined_data_P3)
 
-# test using lmer USE THIS LINEAR MIXED MODEL INSTEAD!!
-mod3<- lmer(rootmass_bulkdensity_cuberoot ~ as.character(year) + community + (1 | subplot), data = QHI_combined_data_P3)
-summary(mod3)
+# USE THIS LINEAR MIXED MODEL INSTEAD to account for subplot!!
+model3 <- lmerTest::lmer(rootmass_bulkdensity_cuberoot ~ as.character(year) + community + (1 | subplot), data = QHI_combined_data_P3)
+summary(model3)
 
 
-# Now let's split it up by community type- using cube root data to meet assumptions, and change to lmer by adding subplot as random  
+# Now let's split it up by community type- using cube root data to meet assumptions and lmer to add subplot as random effect   
 # Shrub: is there a significant difference in shrub root biomass between 2023 and 2024?
 QHI_shrub_data <- QHI_combined_data_P3 %>%
   filter(community == "Shrub")
-mod_shrub <- aov(rootmass_bulkdensity_cuberoot ~ as.character(year), data = QHI_shrub_data)
-summary(mod_shrub)
-# No significant difference in shrub root biomass between 2023 and 2024 (p = 0.397)
-# no significant change (i.e. decrease) but most decrease out of all communties, so may be a trend to watch for in future years
-
 # use lmer to account for subplot as random effect
 mod_shrub_lmer <- lmer(rootmass_bulkdensity_cuberoot ~ as.character(year) + (1 | subplot), data = QHI_shrub_data)
 summary(mod_shrub_lmer)
+# No significant difference in shrub root biomass between 2023 and 2024 (p = 0.397)
+# no significant change (i.e. decrease) but most decrease out of all communties, so may be a trend to watch for in future years
+
 
 # Mix: is there a significant difference in mix root biomass between 2023 and 2024?
 QHI_mix_data <- QHI_combined_data_P3 %>%
   filter(community == "Mix")
-mod_mix <- aov(rootmass_bulkdensity_cuberoot ~ as.character(year), data = QHI_mix_data)
-summary(mod_mix)
+mod_mix_lmer <- lmer(rootmass_bulkdensity_cuberoot ~ as.character(year) + (1 | subplot), data = QHI_mix_data)
+summary(mod_mix_lmer)
 # No significant difference in mix root biomass between 2023 and 2024 (p = 0.966)
 
 # Graminoid: is there a significant difference in graminoid root biomass between 2023 and 2024?
 # Can't do yet as no 2024 data but will need to do lm as only two plots 
+QHI_graminoid_data <- QHI_combined_data_P3 %>%
+  filter(community == "Graminoid")
+mod_graminoid_lm <- lm(rootmass_bulkdensity_cuberoot ~ as.character(year), data = QHI_graminoid_data)
+summary(mod_graminoid_lm)
+# No significant difference in graminoid root biomass between 2023 and 2024 
+
 # DATA ANALYSIS FIGURE 6- including 30cm ----
 # Is there a significant relationship between depth and root biomass in 2023 vs 2024 by community type?
 # i.e. comparison of biomass:depth relationship for shrubs, mix, and graminoid communities in 2023 vs 2024
@@ -93,7 +99,7 @@ QHI_combined_data_P3 <- QHI_combined_data_P3 %>%
   mutate(max_depth_numeric = as.numeric(as.character(max_depth_increment)))
 
 # refit model with numeric depth
-mod_slopes <- lmer(rootmass_bulkdensity ~ as.character(year) * community * max_depth_numeric + 
+mod_slopes <- lmer(rootmass_bulkdensity_cuberoot ~ as.character(year) * community * max_depth_numeric + 
                      (1 | subplot), 
                    data = QHI_combined_data_P3)
 
@@ -131,7 +137,7 @@ QHI_combined_data_P3_no30 <- QHI_combined_data_P3_no30 %>%
   mutate(max_depth_numerical = as.numeric(as.character(max_depth_increment)))
 
 # Refit model without 30 cm depth increment
-mod_slopes_no30 <- lmer(rootmass_bulkdensity ~ as.character(year) * community * max_depth_numerical + 
+mod_slopes_no30 <- lmer(rootmass_bulkdensity_cuberoot ~ as.character(year) * community * max_depth_numerical + 
                           (1 | subplot), 
                         data = QHI_combined_data_P3_no30)
 summary(mod_slopes_no30)
@@ -149,68 +155,81 @@ emtrends(mod_slopes_no30, pairwise ~ year | community, var = "max_depth_numerica
 # Q5: Is there a significant depth-biomass relationship in 2023 graminoid?
 # Q6: Is there a significant depth-biomass relationship in 2024 graminoid?
 
+# Convert to numeric
+QHI_combined_data_P3 <- QHI_combined_data_P3 %>%
+  mutate(max_depth_numeric = as.numeric(as.character(max_depth_increment)))
 
 # Q1
 shrub_2023 <- filter(QHI_combined_data_P3, community == "Shrub", year == 2023)
-mod_shrub_2023 <- lmer(rootmass_bulkdensity ~ max_depth_numeric + (1 | subplot), 
+mod_shrub_2023 <- lmer(rootmass_bulkdensity_cuberoot ~ max_depth_numeric + (1 | subplot), 
                        data = shrub_2023)
 summary(mod_shrub_2023)  
 
 # Q2
 shrub_2024 <- filter(QHI_combined_data_P3, community == "Shrub", year == 2024)
-mod_shrub_2024 <- lm(rootmass_bulkdensity ~ max_depth_numeric, 
+mod_shrub_2024 <- lm(rootmass_bulkdensity_cuberoot ~ max_depth_numeric, 
                        data = shrub_2024)
 summary(mod_shrub_2024)
 
 # Q3
 mix_2023 <- filter(QHI_combined_data_P3, community == "Mix", year == 2023)
-mod_mix_2023 <- lmer(rootmass_bulkdensity ~ max_depth_numeric + (1 | subplot), 
+mod_mix_2023 <- lmer(rootmass_bulkdensity_cuberoot ~ max_depth_numeric + (1 | subplot), 
                        data = mix_2023)
 summary(mod_mix_2023)
 
 # Q4
 mix_2024 <- filter(QHI_combined_data_P3, community == "Mix", year == 2024)
-mod_mix_2024 <- lm(rootmass_bulkdensity ~ max_depth_numeric, 
+mod_mix_2024 <- lm(rootmass_bulkdensity_cuberoot ~ max_depth_numeric, 
                        data = mix_2024)
 summary(mod_mix_2024)
 
 # Q5
 graminoid_2023 <- filter(QHI_combined_data_P3, community == "Graminoid", year == 2023)
-mod_graminoid_2023 <- lmer(rootmass_bulkdensity ~ max_depth_numeric + (1 | subplot), 
+mod_graminoid_2023 <- lmer(rootmass_bulkdensity_cuberoot ~ max_depth_numeric + (1 | subplot), 
                        data = graminoid_2023)
 summary(mod_graminoid_2023)
 
 # Q6
-# can't do yet as no 2024 data for graminoid community
+graminoid_2024 <- filter(QHI_combined_data_P3, community == "Graminoid", year == 2024)
+mod_graminoid_2024 <- lm(rootmass_bulkdensity_cuberoot ~ max_depth_numeric, 
+                       data = graminoid_2024)
+summary(mod_graminoid_2024)
+
 # DATA ANALYSIS FIGURE 6- excluding 30cm EACH SLOPE----
 # Repeat the above analyses but excluding 30 cm depth increment
 
 #Q1
 shrub_2023_no30 <- filter(QHI_combined_data_P3_no30, community == "Shrub", year == 2023)
-mod_shrub_2023_no30 <- lmer(rootmass_bulkdensity ~ max_depth_numerical + (1 | subplot), 
+mod_shrub_2023_no30 <- lmer(rootmass_bulkdensity_cuberoot ~ max_depth_numerical + (1 | subplot), 
                        data = shrub_2023_no30)
 summary(mod_shrub_2023_no30)
 
 # Q2
 shrub_2024_no30 <- filter(QHI_combined_data_P3_no30, community == "Shrub", year == 2024)
-mod_shrub_2024_no30 <- lm(rootmass_bulkdensity ~ max_depth_numerical, 
+mod_shrub_2024_no30 <- lm(rootmass_bulkdensity_cuberoot ~ max_depth_numerical, 
                        data = shrub_2024_no30)
 summary(mod_shrub_2024_no30)
 
 # Q3
 mix_2023_no30 <- filter(QHI_combined_data_P3_no30, community == "Mix", year == 2023)
-mod_mix_2023_no30 <- lmer(rootmass_bulkdensity ~ max_depth_numerical + (1 | subplot), 
+mod_mix_2023_no30 <- lmer(rootmass_bulkdensity_cuberoot ~ max_depth_numerical + (1 | subplot), 
                        data = mix_2023_no30)
 summary(mod_mix_2023_no30)
 
 # Q4
 mix_2024_no30 <- filter(QHI_combined_data_P3_no30, community == "Mix", year == 2024)
-mod_mix_2024_no30 <- lm(rootmass_bulkdensity ~ max_depth_numerical, 
+mod_mix_2024_no30 <- lm(rootmass_bulkdensity_cuberoot ~ max_depth_numerical, 
                        data = mix_2024_no30)
 summary(mod_mix_2024_no30)
 
 # Q5
 graminoid_2023_no30 <- filter(QHI_combined_data_P3_no30 , community == "Graminoid", year == 2023)
-mod_graminoid_2023_no30 <- lmer(rootmass_bulkdensity ~ max_depth_numerical + (1 | subplot), 
+mod_graminoid_2023_no30 <- lmer(rootmass_bulkdensity_cuberoot ~ max_depth_numerical + (1 | subplot), 
                        data = graminoid_2023_no30)
 summary(mod_graminoid_2023_no30)
+
+# Q6
+graminoid_2024_no30 <- filter(QHI_combined_data_P3_no30, community == "Graminoid", year == 2024)
+mod_graminoid_2024_no30 <- lm(rootmass_bulkdensity_cuberoot ~ max_depth_numerical, 
+                       data = graminoid_2024_no30)
+summary(mod_graminoid_2024_no30)
