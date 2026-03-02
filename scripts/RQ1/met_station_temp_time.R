@@ -13,7 +13,8 @@ met_station_combined <- read_excel("datasets/climate_data/met_station_combined.x
 
 # CLEAN DATA----
 # average daily temps for each doy 
-met_station_avg <- met_station_combined %>%
+met_station_
+avg <- met_station_combined %>%
   group_by(year, doy) %>%
   summarise(
     avg_temp = mean(air_temp, na.rm = TRUE),
