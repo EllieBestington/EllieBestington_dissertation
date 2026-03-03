@@ -57,3 +57,9 @@ summary(mod2)
 shapiro.test(mod2$residuals)
 hist(mod2$residuals)
 # again pretty normal when plot as histogram 
+
+# was active layer significantly less in 2024 than 2023
+ald_2023_2024 <- ald_all_years %>%
+  filter(year %in% c(2023, 2024))
+t.test(thaw_av ~ as.factor(year), data = ald_2023_2024)
+
