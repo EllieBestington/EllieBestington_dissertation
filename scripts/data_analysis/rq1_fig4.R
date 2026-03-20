@@ -27,7 +27,7 @@ ald_pre2023 <- ald_all_years %>%
 # DATA ANALYSIS UP TO 2023----
 mod_activelayer<-lm(thaw_av ~ year, data = ald_pre2023)
 summary(mod_activelayer)
-
+nobs(mod_activelayer)# extract sample size 
 # highly significant relationship between year and thaw_av up to 2023, with a positive slope of 0.019.
 # about a +0.68 cm increase in active layer per year 
 # p value < 0.001
@@ -36,7 +36,7 @@ summary(mod_activelayer)
 
 # check assumptions 
 shapiro.test(mod_activelayer$residuals) 
-hist(mod_activelayer_2023$residuals)
+hist(mod_activelayer$residuals)
 # shapiro test said not normal but from looking at histogram and plots, residuals look reasonably normal, so we can proceed with the model.(include in appendix)
 
 # bartletts test for homogeneity of variance
@@ -46,7 +46,7 @@ bartlett.test(thaw_av ~ as.factor(year), data = ald_pre2023)
 # DATA ANALYSIS INCLUDING 2024/25----
 mod2<-lm(thaw_av ~ year, data = ald_all_years)
 summary(mod2)
-
+nobs(mod2)
 # still significant but barely - p value = 0.049, just below 0.05 threshold 
 # but point being, including 2024/25 changes the significance/relationship 
 # now decreasing active of -0.10 cm per year 
