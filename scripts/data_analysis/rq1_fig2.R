@@ -43,6 +43,13 @@ summary(model1)
 
 # significant interaction (p=0.0325)-> temp trend differs significantly between years
 
+# extract R2 for 2023 only 
+# Fit model for 2023 only
+lm_2023_only <- lm(max_temp ~ doy, data = subset(daily_max_temp, year_factor == "2023"))
+summary(lm_2023_only)
+
+lm_2024_only <- lm(max_temp ~ doy, data = subset(daily_max_temp, year_factor == "2024"))
+summary(lm_2024_only)
 
 # DATA ANALYSIS 1.2----
 # do average summer temps differ between 2023 and 2024, i.e. was 2023 significantly warmer?
