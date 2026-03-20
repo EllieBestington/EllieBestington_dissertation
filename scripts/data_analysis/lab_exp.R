@@ -71,7 +71,7 @@ clean_control_exp_data$day <- floor(clean_control_exp_data$hour / 24)
 
 # fit GAM
 
-mod2 <- gam(log_change_in_temp ~factor(depth) + s(hour_mod, by = factor(depth), bs = "cc", k = 5) +
+mod2 <- gam(change_in_temp ~factor(depth) + s(hour_mod, by = factor(depth), bs = "cc", k = 5) +
     s(day, bs = "re"),
   data = clean_control_exp_data,
   method = "REML"
