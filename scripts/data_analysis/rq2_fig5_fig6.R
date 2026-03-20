@@ -34,26 +34,26 @@ QHI_combined_data_P3 <- QHI_combined_data %>%
 # DATA ANALYSIS FIGURE 5----
 # Is there a significant difference in root biomass between 2023 and 2024 by community type?#
 
-mod1<-aov(rootmass_bulkdensity ~ as.character(year) + community, data = QHI_combined_data_P3)
-summary(mod1)
+mod_rootbiomass<-aov(rootmass_bulkdensity ~ as.character(year) + community, data = QHI_combined_data_P3)
+summary(mod_rootbiomass)
 
 # No significant difference between 2023 and 2024 (p = 0.608)
 # No significant difference among communities (p = 0.296)
 # Root mass bulk density is similar across years and community types
 
 # check assumptions 
-shapiro.test(mod1$residuals)
-hist(mod1$residuals) 
+shapiro.test(mod_rootbiomass$residuals)
+hist_rootbiomass<-hist(mod_rootbiomass$residuals) 
 # not normal 
 
 # CUBE ROOT DATA
 QHI_combined_data_P3 <- QHI_combined_data_P3 %>%
   mutate(rootmass_bulkdensity_cuberoot = rootmass_bulkdensity^(1/3))
-mod1_cuberoot <- aov(rootmass_bulkdensity_cuberoot ~ as.character(year) + community, data = QHI_combined_data_P3)
-summary(mod1_cuberoot)
+mod_rootbiomass_cuberoot <- aov(rootmass_bulkdensity_cuberoot ~ as.character(year) + community, data = QHI_combined_data_P3)
+summary(mod_rootbiomass_cuberoot)
 
-shapiro.test(mod1_cuberoot$residuals)
-hist(mod1_cuberoot$residuals)
+shapiro.test(mod_rootbiomass_cuberoot$residuals)
+hist_cuberoot<-hist(mod_rootbiomass_cuberoot$residuals)
 # now normal 
 
 bartlett.test(rootmass_bulkdensity_cuberoot ~ as.factor(year), data = QHI_combined_data_P3)
@@ -82,12 +82,13 @@ summary(mod_mix_lmer)
 # No significant difference in mix root biomass between 2023 and 2024 (p = 0.966)
 
 # Graminoid: is there a significant difference in graminoid root biomass between 2023 and 2024?
-# Can't do yet as no 2024 data but will need to do lm as only two plots 
 QHI_graminoid_data <- QHI_combined_data_P3 %>%
   filter(community == "Graminoid")
 mod_graminoid_lm <- lm(rootmass_bulkdensity_cuberoot ~ as.character(year), data = QHI_graminoid_data)
 summary(mod_graminoid_lm)
+nobs(mod_graminoid_lm)
 # No significant difference in graminoid root biomass between 2023 and 2024 
+
 
 # DATA ANALYSIS FIGURE 6- including 30cm ----
 # Is there a significant relationship between depth and root biomass in 2023 vs 2024 by community type?
@@ -110,7 +111,8 @@ emtrends(mod_slopes, pairwise ~ year | community, var = "max_depth_numeric")
 
 # Graminoid
 # 2023 slope: -0.011 (decreasing slightly with depth)
-# 2024 slope: no data yet 
+# 2024 slope: -0.
+# Difference: p= 0.3665
 
 # Mix
 # 2023 slope: -0.0028 (essentially flat, very slight decrease 
