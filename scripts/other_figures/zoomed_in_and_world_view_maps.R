@@ -20,35 +20,27 @@ library(readxl)
 
 # Get world data for Arctic view
 world <- ne_countries(scale = "medium", returnclass = "sf")
-
 # Qikiqtaruk/Herschel Island coordinates
 qhi <- data.frame(
   name = "Qikiqtaruk\n(Herschel Island)",
   lon = -139.0,
   lat = 69.6
 )
-
 # Create polar stereographic projection centered on North Pole
 polar_crs <- "+proj=ortho +lat_0=90 +lon_0=-100 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"
-
 # Transform world map to polar projection
 world_polar <- st_transform(world, crs = polar_crs)
-
 # Create orthographic projection centered on Arctic
 ortho_crs <- "+proj=ortho +lat_0=75 +lon_0=-130"
-
 # Transform world map to polar projection
 world_ortho <- st_transform(world, crs = ortho_crs)
-
 # Transform QHI point to polar projection
 qhi_sf <- st_as_sf(qhi, coords = c("lon", "lat"), crs = 4326) %>%
   st_transform(crs = polar_crs)
-
 # Get coordinates for the point (for arrow)
 qhi_coords <- st_coordinates(qhi_sf)
 point_x <- qhi_coords[1, "X"]
 point_y <- qhi_coords[1, "Y"]
-
 # Create label position (to the left of the point)
 label_x <- qhi_coords[1] - 1500000  # Move left
 label_y <- qhi_coords[2] - 800000   # Move down slightly
@@ -159,44 +151,21 @@ ggsave(zoomed_map,
 # get yukon bbox
 
 library(geodata)
-
 can_gadm <- gadm(country = "CAN", level = 1, path = tempdir())
-
-
 yukon_sf <- st_as_sf(can_gadm) %>%
   
   dplyr::filter(NAME_1 == "Yukon")
 
-
-
 # correct the crs
-
 custom_crs <- "+proj=laea +lat_0=69.59 +lon_0=-138.91 +datum=WGS84 +units=m +no_defs"
-
 subplots_proj <- st_transform(subplots_sf, crs = custom_crs)
-
 bbox <- st_bbox(subplots_proj)
-
-
-
-
-
 yukon_final <- st_transform(yukon_sf, crs = custom_crs)
-
 subplots_final <- st_transform(subplots_sf, crs = custom_crs)
-
-
-
 # get bounding box
-
 xlims <- c(bbox["xmin"] - 14000, bbox["xmax"] + 1000)
-
 ylims <- c(bbox["ymin"] - 6000, bbox["ymax"] + 7000)
-
-
-
 # new plot
-
 (final_map <- ggplot() +
     theme_minimal() +
     theme(panel.background = element_rect(fill = "#D0E1F9", color = NA)) +
