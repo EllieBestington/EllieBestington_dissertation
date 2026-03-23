@@ -5,7 +5,7 @@
 ### Research Title: Heatwave characteristics mediate belowground response in Arctic tundra communities 
 ---
 #### Repository Structure
-Repository includes: datasets, figures, R scripts, statistical output, Markdown structure, backup material, project organisation.
+Repository includes the datasets, figures, R scripts, statistical analysis scripts used for my undergraduate dissertation thesis. 
 
 ---
 #### Abstract 
