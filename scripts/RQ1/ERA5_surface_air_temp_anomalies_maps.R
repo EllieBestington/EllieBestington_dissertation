@@ -4,14 +4,24 @@
 
 # LOAD LIBRARIES----
 library(tidyverse)
-library(ecmwfr)      # For downloading ERA5 data
-library(ncdf4)       # For reading NetCDF files
-library(raster)      # For spatial data handling
-library(ggplot2)     # For plotting
-library(sf)          # For spatial features
-library(rnaturalearth) # For world map
-library(viridis)     # For color scales
+library(dplyr)
+library(readxl)
+library(ggplot2)
+library(emmeans)
+library(lmerTest)
+library(ecmwfr)      
+library(ncdf4)       
+library(raster)      
+library(sf)          
+library(rnaturalearth) 
 library(terra)
+library(grid)
+library(ggrepel)
+library(ggspatial)
+library(ggmap)
+library(osmdata)
+
+
 
 # SET WORKING DIRECTORY----
 # set working directory 
