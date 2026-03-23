@@ -32,46 +32,30 @@ wd<-"C:/Users/ellie/OneDrive - University of Edinburgh/Dissertation/Data/climate
 # JULY 2024 SURFACE AIR TEMP ANOMALY WORLD -----
 # terra to read the values
 t2m_2024 <- rast("7d91be1f823d11ebe4bd035c9a3651db.nc")
-t2m_2024 <- setMinMax(t2m_2024)  # This forces it to scan the data
-
+t2m_2024 <- setMinMax(t2m_2024)  # Force scan 
 # baseline data 1990- 2020
 baseline_all <- rast("fe643b60b687ae11197cc8fefaee9e85.nc")
-
 # Average the 30 baseline years
 t2m_baseline <- mean(baseline_all)
-
 # Convert to Celsius
 t2m_2024_c <- t2m_2024 - 273.15
 t2m_baseline_c <- t2m_baseline - 273.15
-
 # Calculate anomaly
 anomaly <- t2m_2024_c - t2m_baseline_c
-
 # Check the range again
 print(global(anomaly, "range", na.rm = TRUE))
-
 # Convert to dataframe for plotting
 anomaly_df <- as.data.frame(anomaly, xy = TRUE, na.rm = FALSE)
 names(anomaly_df) <- c("lon", "lat", "anomaly")
-
 # Remove any infinite or NA values
 anomaly_df <- anomaly_df[is.finite(anomaly_df$anomaly), ]
-
 # Check the data
 summary(anomaly_df$anomaly)
 head(anomaly_df)
-
-# Your anomaly data (assuming you already have anomaly_df)
-# Check the distribution
-quantile(anomaly_df$anomaly, probs = seq(0, 1, 0.1))
-
-
 # Convert longitude from 0-360 to -180-180
 anomaly_df$lon <- ifelse(anomaly_df$lon > 180, anomaly_df$lon - 360, anomaly_df$lon)
-
 # Now sort by longitude to avoid plotting issues
 anomaly_df <- anomaly_df[order(anomaly_df$lon, anomaly_df$lat), ]
-
 # Get world map
 world <- ne_countries(scale = "medium", returnclass = "sf")
 
@@ -121,20 +105,17 @@ ggsave("surface_air_temp_anomaly_july_2024.png",
 
 
 # JULY 2024 QHI ZOOMED----
-
 # Define the bounding box for Qikiqtaruk/Herschel Island region
 # Adjust these as needed for how much area you want to show
 lon_min <- -145
 lon_max <- -133
 lat_min <- 68
 lat_max <- 71
-
 # Filter your anomaly data to this region
 anomaly_zoom <- anomaly_df[anomaly_df$lon >= lon_min & 
                              anomaly_df$lon <= lon_max & 
                              anomaly_df$lat >= lat_min & 
                              anomaly_df$lat <= lat_max, ]
-
 # Get more detailed map data for North America
 world <- ne_countries(scale = "large", returnclass = "sf")  # Use 'large' for more detail
 states <- ne_states(country = c("canada", "united states of america"), returnclass = "sf")
