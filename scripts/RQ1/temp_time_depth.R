@@ -70,6 +70,7 @@ clean_control_exp_data <- read_excel("datasets/lab_experiment/clean_control_exp_
   geom_line() +
   geom_point(size = 2) +
   scale_color_gradient(high = "#132B43", low = "#56B1F7") +  # dark to light
+  guides(color = guide_colorbar(reverse = TRUE))+
   labs(
     x = "Time (hours)",
     y = "Difference in Temperature (°C)",
@@ -84,6 +85,8 @@ clean_control_exp_data <- read_excel("datasets/lab_experiment/clean_control_exp_
     legend.text = element_text(size = 10)
   )
 )
+
+
 
 # difference greatest in first 24 hours- correlates with rapid thawing of experimental but retention of cold/frozenness in control 
 # due to polystrene that is insulating control 
