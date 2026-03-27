@@ -108,7 +108,8 @@ bartlett.test(thaw_av ~ year, data = ald_all_years)
          y = "Active Layer Depth (cm)") +
    annotate("text", x = 1990, y = 5, label = "R2 = 0.004", size = 5, color = "black")+
     theme_classic()+
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),
+          axis.text.y = element_text(size = 5))+
    scale_y_reverse()+
    geom_hline(yintercept = 0, linetype = "dashed", color = "black", linewidth = 1)
    
@@ -150,7 +151,8 @@ ald_pre2023 <- ald_all_years %>%
          y = "Active Layer Depth (cm)") +
     annotate("text", x = 1990, y = 5, label = "R2 = 0.24", size = 5, color = "black")+
     theme_classic()+
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),
+          axis.text.y = element_text(size = 5))+
     scale_y_reverse()+
     geom_hline(yintercept = 0, linetype = "dashed", color = "black", linewidth = 1)
 )
