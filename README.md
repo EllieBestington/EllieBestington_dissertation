@@ -14,3 +14,7 @@ The Arctic is warming four times faster the global average, and tundra plant com
 ---
 #### Acknowledgements
 I would like to thank my supervisor Dr Claudia Colesie, in addition to Prof. Isla Myers-Smith and Dr Elise Gallois for providing me with datasets collected for the NERC-funded TundraTime project. 
+
+---
+### Contact 
+For more information about the study, contact Ellie Bestington at elliebestington@yahoo.com. For more information about the data included in this study and permission for future use, please contact Isla Myers-Smith from Team Shrub at isla.myers-smith@ubc.ca
