@@ -66,4 +66,19 @@ QHI_mirrored <- QHI_mirrored %>%
 )
 
 
+# FIGURE P3s AND NO MIX COMMUNITY only-----
+(community_biomass_year <- QHI_combined_data_P3 %>%
+   filter(year %in% c(2023, 2024)) %>%
+   filter(community != "Mix") %>%
+   ggplot(aes(x = community, y = rootmass_bulkdensity, fill = as.factor(year))) +
+   geom_boxplot(position = position_dodge(width = 0.8), alpha = 0.7) +
+   labs(
+     x = "Community",
+     y = "Root Biomass Density (g cm⁻³)",
+     fill = "Year") +
+   scale_fill_manual(values = c("2023" = "brown3", "2024" = "steelblue")) +
+   scale_y_continuous(labels = scales::label_number(accuracy = 0.1)) +
+   theme_classic()
+)
+
 
