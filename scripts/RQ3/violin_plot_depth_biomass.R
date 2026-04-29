@@ -69,7 +69,7 @@ QHI_combined_data_P3$max_depth_increment <- factor(QHI_combined_data_P3$max_dept
   facet_grid(year~ community) +
   scale_y_discrete(limits = rev) +  # Reverse so shallowest depth is on top
   labs(
-    x = "Root Biomass (g/cm³)",
+    x = "Average Root Biomass (g/cm³)",
     y = "Depth (cm)",
     fill = "Community"
   ) +
