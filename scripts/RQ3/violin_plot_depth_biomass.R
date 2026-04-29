@@ -28,6 +28,61 @@ QHI_combined_data_P3 <- QHI_combined_data %>%
 # Convert to numeric if needed
 QHI_combined_data_P3$max_depth_increment <- as.numeric(QHI_combined_data_P3$max_depth_increment)
 
+# remove mix
+QHI_combined_data_P3 <- QHI_combined_data_P3 %>%
+  filter(community != "Mix")
+
+# VIOLIN PLOT: DEPTH, BIOMASS, YEAR----
+(ggplot(QHI_combined_data_P3, aes(x = rootmass_bulkdensity, y = max_depth_increment)) +
+  geom_violin(aes(fill = community), 
+              trim = FALSE, 
+              scale = "width",
+              alpha = 0.7) +
+  facet_grid(year~ community) +
+  scale_y_reverse() +
+  scale_x_continuous(position = "top") +
+  labs(
+    x = "Root Biomass (g/cm³)",
+    y = "Depth (cm)",
+    fill = "Community"
+  ) +
+   scale_fill_manual(values = c("Graminoid" = "#E69F00",
+                                "Shrub" = "#009E73"))+
+  theme_bw() +
+   theme(
+     strip.text = element_text(face = "bold", size = 12),
+     panel.grid.major.x = element_line(color = "gray90"),
+     panel.grid.minor = element_blank(),
+     legend.position = "none"
+   )
+)
+
+
+# BARCHART DEPTH, BIOMASS, YEAR----
+
+# First, make sure depth is a factor
+QHI_combined_data_P3$max_depth_increment <- factor(QHI_combined_data_P3$max_depth_increment)
+
+# Create bar chart
+(ggplot(QHI_combined_data_P3, aes(x = rootmass_bulkdensity, y = max_depth_increment, fill = community)) +
+  geom_col(position = position_dodge(width = 0.8)) +
+  facet_grid(year~ community) +
+  scale_y_discrete(limits = rev) +  # Reverse so shallowest depth is on top
+  labs(
+    x = "Root Biomass (g/cm³)",
+    y = "Depth (cm)",
+    fill = "Community"
+  ) +
+    scale_fill_manual(values = c("Graminoid" = "#E69F00",
+                                 "Shrub" = "#009E73"))+
+  theme_bw() +
+  theme(
+    strip.text = element_text(face = "bold", size = 12),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = "none"
+  )
+)
 
 # VIOLIN PLOT: DEPTH, BIOMASS, YEAR----
 QHI_mirrored <- QHI_combined_data_P3 %>%
